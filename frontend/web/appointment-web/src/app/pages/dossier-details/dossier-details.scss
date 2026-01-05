@@ -1,0 +1,29 @@
+:host ::ng-deep {
+    .p-card {
+        border-radius: 12px;
+
+        .p-card-header {
+            font-weight: 600;
+            font-size: 1.25rem;
+            color: var(--primary-color);
+        }
+    }
+
+    .p-tabview {
+        .p-tabview-nav {
+            border-radius: 12px 12px 0 0;
+        }
+
+        .p-tabview-panels {
+            border-radius: 0 0 12px 12px;
+        }
+    }
+
+    .p-tag {
+        font-weight: 500;
+    }
+}
+
+.card {
+    min-height: 100vh;
+}

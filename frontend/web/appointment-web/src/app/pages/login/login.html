@@ -1,0 +1,39 @@
+<div class="login-wrapper">
+    <div class="login-container">
+        <p-card header="Welcome Back" subheader="Please sign in to continue" [style]="{ width: '100%', maxWidth: '450px' }" styleClass="shadow-8">
+            <ng-template pTemplate="header">
+                 <div class="header-image-container">
+                    <img alt="Login Header" src="https://primefaces.org/cdn/primeng/images/card-ng.jpg" class="header-image" />
+                 </div>
+            </ng-template>
+            
+            <div class="flex flex-column gap-4 mt-3">
+                <p-iftalabel>
+                    <input pInputText id="email" [(ngModel)]="email" class="w-full" />
+                    <label htmlFor="email">Email Address</label>
+                </p-iftalabel>
+
+                <p-iftalabel>
+                    <p-password [(ngModel)]="password" inputId="password" [toggleMask]="true" [feedback]="false" styleClass="w-full" inputStyleClass="w-full"></p-password>
+                    <label htmlFor="password">Password</label>
+                </p-iftalabel>
+
+                <div class="flex align-items-center justify-content-between">
+                    <div class="flex align-items-center gap-2">
+                        <p-checkbox [(ngModel)]="rememberMe" [binary]="true" inputId="remember"></p-checkbox>
+                        <label for="remember" class="cursor-pointer">Remember me</label>
+                    </div>
+                    <a href="#" class="no-underline text-primary hover:underline font-medium">Forgot Password?</a>
+                </div>
+
+                <p-button label="Sign In" icon="pi pi-user" styleClass="w-full" (onClick)="onLogin()"></p-button>
+            </div>
+            
+            <ng-template pTemplate="footer">
+                <div class="text-center mt-3 text-500 text-sm">
+                    Don't have an account? <a href="#" class="font-bold text-primary no-underline hover:underline">Sign up</a>
+                </div>
+            </ng-template>
+        </p-card>
+    </div>
+</div>

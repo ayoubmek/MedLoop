@@ -1,0 +1,12 @@
+:host ::ng-deep .p-dialog .field {
+    margin-bottom: 1.5rem;
+}
+
+:host ::ng-deep .p-dialog .field>label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+
+:host ::ng-deep .p-dialog .p-error {
+    color: red;
+}

@@ -1,0 +1,19 @@
+<div class="card relative z-2">
+    <p-menubar [model]="items">
+        <ng-template pTemplate="start">
+            <p-button icon="pi pi-bars" [text]="true" styleClass="lg:hidden mr-2"
+                (onClick)="toggleSidebar.emit()"></p-button>
+            <span class="font-bold text-xl text-primary">MedLoop</span>
+        </ng-template>
+        <ng-template pTemplate="end">
+            <div class="flex align-items-center gap-2">
+                <p-iconfield iconPosition="left">
+                    <p-inputicon styleClass="pi pi-search" />
+                    <input type="text" pInputText placeholder="Global Search" class="w-8rem sm:w-auto" />
+                </p-iconfield>
+                <p-button label="Logout" icon="pi pi-power-off" styleClass="p-button-danger p-button-text"
+                    (onClick)="logout()"></p-button>
+            </div>
+        </ng-template>
+    </p-menubar>
+</div>

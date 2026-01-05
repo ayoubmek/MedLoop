@@ -1,0 +1,87 @@
+<div class="card p-4">
+    <p-toast></p-toast>
+    <p-toolbar styleClass="mb-4 gap-2 border-round-xl shadow-2">
+        <ng-template pTemplate="left">
+            <p-button label="New Dossier" icon="pi pi-plus" styleClass="p-button-success" class="mr-2"
+                (onClick)="openNew()"></p-button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="dossiers" [tableStyle]="{ 'min-width': '60rem' }" [rows]="10" [paginator]="true"
+        [globalFilterFields]="['type', 'notes', 'patientId']">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <span class="text-xl font-bold">Dossiers</span>
+                <span class="p-input-icon-left ml-auto mr-2">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                        placeholder="Search keyword..." />
+                </span>
+                <p-button icon="pi pi-refresh" [rounded]="true" [raised]="true" (onClick)="loadDossiers()" />
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Type</th>
+                <th>Notes</th>
+                <th>Patient</th>
+                <th>Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-dossier>
+            <tr>
+                <td class="font-medium">{{ dossier.type }}</td>
+                <td>{{ dossier.notes }}</td>
+                <td><span class="p-tag severity-info">{{ getPatientName(dossier.patientId) }}</span></td>
+                <td>
+                    <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="success"
+                        (onClick)="viewDossier(dossier)" pTooltip="View Details" tooltipPosition="top" />
+                    <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="info"
+                        (onClick)="editDossier(dossier)" pTooltip="Edit" tooltipPosition="top" />
+                    <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
+                        (onClick)="deleteDossier(dossier)" pTooltip="Delete" tooltipPosition="top" />
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <tr>
+                <td colspan="4">In total there are {{ dossiers ? dossiers.length : 0 }} dossiers.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="dossierDialog" [style]="{width: '600px'}" header="Dossier Details" [modal]="true"
+    styleClass="p-fluid border-round-2xl">
+    <ng-template pTemplate="content">
+        <div class="formgrid grid mt-3">
+            <div class="field col-12 md:col-6">
+                <label for="type" class="font-bold">Type</label>
+                <input type="text" pInputText id="type" [(ngModel)]="dossier.type" required autofocus
+                    class="border-round-lg" placeholder="Enter Type" />
+                <small class="p-error block mt-1" *ngIf="submitted && !dossier.type">Type is required.</small>
+            </div>
+            <div class="field col-12 md:col-6">
+                <label for="patient" class="font-bold">Patient</label>
+                <p-select [options]="patientOptions" [(ngModel)]="dossier.patientId" placeholder="Select a Patient"
+                    [filter]="true" [showClear]="true" styleClass="w-full border-round-lg">
+                </p-select>
+                <small class="p-error block mt-1" *ngIf="submitted && !dossier.patientId">Patient is required.</small>
+            </div>
+            <div class="field col-12">
+                <label for="notes" class="font-bold">Notes</label>
+                <textarea pInputText id="notes" [(ngModel)]="dossier.notes" class="border-round-lg" rows="3"
+                    placeholder="Enter Notes"></textarea>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <p-button label="Cancel" icon="pi pi-times" [text]="true" (onClick)="hideDialog()"
+            styleClass="p-button-secondary"></p-button>
+        <p-button label="Save Dossier" icon="pi pi-check" [raised]="true" (onClick)="saveDossier()"
+            styleClass="p-button-primary border-round-lg"></p-button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

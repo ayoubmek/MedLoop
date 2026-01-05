@@ -1,0 +1,51 @@
+<div class="grid">
+    <div class="col-12 md:col-6 lg:col-3" *ngFor="let stat of stats">
+        <div class="surface-card shadow-2 p-3 border-round">
+            <div class="flex justify-content-between mb-3">
+                <div>
+                    <span class="block text-500 font-medium mb-3">{{stat.title}}</span>
+                    <div class="text-900 font-medium text-xl">{{stat.value}}</div>
+                </div>
+                <div class="flex align-items-center justify-content-center bg-{{stat.bg}} border-round"
+                    style="width:2.5rem;height:2.5rem">
+                    <i class="text-{{stat.color}} text-xl {{stat.icon}}"></i>
+                </div>
+            </div>
+            <span class="text-green-500 font-medium">24 new </span>
+            <span class="text-500">since last visit</span>
+        </div>
+    </div>
+
+    <div class="col-12 lg:col-6">
+        <div class="card p-3 border-round shadow-2 surface-card h-full">
+            <h5 class="text-xl font-bold mb-3">Patient Statistics</h5>
+            <p-chart type="line" [data]="data" [options]="options" class="h-full"></p-chart>
+        </div>
+    </div>
+
+    <div class="col-12 lg:col-6">
+        <div class="card p-3 border-round shadow-2 surface-card h-full">
+            <h5 class="text-xl font-bold mb-3">Recent Activity</h5>
+            <ul class="list-none p-0 m-0">
+                <li class="flex align-items-center py-3 border-bottom-1 surface-border">
+                    <div
+                        class="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
+                        <i class="pi pi-dollar text-xl text-blue-500"></i>
+                    </div>
+                    <span class="text-900 line-height-3">Dr. Smith prescribed <span
+                            class="text-700">Antibiotics</span></span>
+                    <span class="ml-auto text-500">Just now</span>
+                </li>
+                <li class="flex align-items-center py-3">
+                    <div
+                        class="w-3rem h-3rem flex align-items-center justify-content-center bg-orange-100 border-circle mr-3 flex-shrink-0">
+                        <i class="pi pi-download text-xl text-orange-500"></i>
+                    </div>
+                    <span class="text-900 line-height-3">New dossier created for <span class="text-700">Sarah
+                            Jones</span></span>
+                    <span class="ml-auto text-500">2 mins ago</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

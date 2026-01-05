@@ -1,0 +1,21 @@
+<div class="sidebar-content h-full surface-card shadow-2 p-3 border-round-right-2xl">
+    <div class="flex flex-column gap-2 mt-2">
+        <a *ngFor="let item of menuItems" [routerLink]="item.route"
+            routerLinkActive="surface-100 text-primary font-bold"
+            class="no-underline text-700 p-3 border-round-lg cursor-pointer transition-colors transition-duration-150 hover:surface-100 flex align-items-center gap-2">
+            <i [class]="item.icon" class="text-xl"></i>
+            <span class="font-medium">{{item.label}}</span>
+        </a>
+    </div>
+
+    <div class="mt-auto p-3 border-top-1 surface-border">
+        <div
+            class="flex align-items-center gap-2 cursor-pointer p-2 border-round-lg hover:surface-100 transition-colors transition-duration-150">
+            <img src="assets/img/ayoub.jpeg" style="width: 32px; height: 32px" class="border-circle" />
+            <div class="flex flex-column">
+                <span class="font-bold">Dr. Ayoub</span>
+                <span class="text-sm text-500">Admin</span>
+            </div>
+        </div>
+    </div>
+</div>

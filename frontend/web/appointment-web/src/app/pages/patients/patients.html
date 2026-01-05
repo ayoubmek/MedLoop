@@ -1,0 +1,101 @@
+<div class="card p-4">
+    <p-toast></p-toast>
+    <p-toolbar styleClass="mb-4 gap-2 border-round-xl shadow-2">
+        <ng-template pTemplate="left">
+            <p-button label="New Patient" icon="pi pi-plus" styleClass="p-button-success" class="mr-2"
+                (onClick)="openNew()"></p-button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="patients" [tableStyle]="{ 'min-width': '60rem' }" [rows]="10" [paginator]="true"
+        [globalFilterFields]="['nom', 'prenom', 'cin', 'telephone']">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <span class="text-xl font-bold">Patients</span>
+                <span class="p-input-icon-left ml-auto mr-2">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                        placeholder="Search keyword..." />
+                </span>
+                <p-button icon="pi pi-refresh" [rounded]="true" [raised]="true" (onClick)="loadPatients()" />
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Name</th>
+                <th>CIN</th>
+                <th>Telephone</th>
+                <th>Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-patient>
+            <tr>
+                <td>
+                    <div class="flex align-items-center gap-2">
+                        <img alt="avatar" [src]="patient.image ? 'assets/img/' + patient.image : 'assets/img/img3.jpg'"
+                            width="32" height="32" style="object-fit: cover; vertical-align: middle"
+                            class="border-circle" />
+                        <span>{{ patient.nom }} {{ patient.prenom }}</span>
+                    </div>
+                </td>
+                <td>{{ patient.cin }}</td>
+                <td>{{ patient.telephone }}</td>
+                <td>
+                    <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="info"
+                        (onClick)="editPatient(patient)" />
+                    <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
+                        (onClick)="deletePatient(patient)" />
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <tr>
+                <td colspan="4">In total there are {{ patients ? patients.length : 0 }} patients.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="patientDialog" [style]="{width: '600px'}" header="Patient Details" [modal]="true"
+    styleClass="p-fluid border-round-2xl">
+    <ng-template pTemplate="content">
+        <div class="formgrid grid mt-3">
+            <div class="field col-12 md:col-6">
+                <label for="nom" class="font-bold">Nom</label>
+                <input type="text" pInputText id="nom" [(ngModel)]="patient.nom" required autofocus
+                    class="border-round-lg" placeholder="Enter Nom" />
+                <small class="p-error block mt-1" *ngIf="submitted && !patient.nom">Nom is required.</small>
+            </div>
+            <div class="field col-12 md:col-6">
+                <label for="prenom" class="font-bold">Prenom</label>
+                <input type="text" pInputText id="prenom" [(ngModel)]="patient.prenom" required class="border-round-lg"
+                    placeholder="Enter Prenom" />
+                <small class="p-error block mt-1" *ngIf="submitted && !patient.prenom">Prenom is required.</small>
+            </div>
+            <div class="field col-12 md:col-6">
+                <label for="cin" class="font-bold">CIN</label>
+                <input type="text" pInputText id="cin" [(ngModel)]="patient.cin" class="border-round-lg"
+                    placeholder="Enter CIN" />
+            </div>
+            <div class="field col-12 md:col-6">
+                <label for="telephone" class="font-bold">Telephone</label>
+                <input type="text" pInputText id="telephone" [(ngModel)]="patient.telephone" class="border-round-lg"
+                    placeholder="Enter phone" />
+            </div>
+            <div class="field col-12">
+                <label for="image" class="font-bold">Image URL or Filename</label>
+                <input type="text" pInputText id="image" [(ngModel)]="patient.image" class="border-round-lg"
+                    placeholder="e.g. img1.jpg or https://example.com/avatar.png" />
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <p-button label="Cancel" icon="pi pi-times" [text]="true" (onClick)="hideDialog()"
+            styleClass="p-button-secondary"></p-button>
+        <p-button label="Save Patient" icon="pi pi-check" [raised]="true" (onClick)="savePatient()"
+            styleClass="p-button-primary border-round-lg"></p-button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

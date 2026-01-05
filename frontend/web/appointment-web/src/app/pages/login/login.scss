@@ -1,0 +1,42 @@
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-b);
+  padding: 1rem;
+}
+
+.login-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.header-image-container {
+  overflow: hidden;
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+}
+
+.header-image {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+/* Custom overrides for PrimeNG components to ensure width */
+:host ::ng-deep {
+    .p-password {
+        width: 100%;
+    }
+    
+    .p-card {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    
+    .p-inputtext {
+        padding: 1rem;
+    }
+}

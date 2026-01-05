@@ -1,0 +1,121 @@
+<div class="card p-4">
+    <p-toast></p-toast>
+    <p-toolbar styleClass="mb-4 gap-2 border-round-xl shadow-2">
+        <ng-template pTemplate="left">
+            <p-button label="New Consultation" icon="pi pi-plus" styleClass="p-button-success" class="mr-2"
+                (onClick)="openNew()"></p-button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="consultations" [tableStyle]="{ 'min-width': '60rem' }" [rows]="10" [paginator]="true"
+        [globalFilterFields]="['motifConsultation', 'doctorName', 'description', 'diagnostic', 'patientId']">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <span class="text-xl font-bold">Consultations</span>
+                <span class="p-input-icon-left ml-auto mr-2">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                        placeholder="Search keyword..." />
+                </span>
+                <p-button icon="pi pi-refresh" [rounded]="true" [raised]="true" (onClick)="loadConsultations()" />
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Patient</th>
+                <th>Doctor</th>
+                <th>Date</th>
+                <th>Motif</th>
+                <th>Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-consultation>
+            <tr>
+                <td>{{ getPatientName(consultation) }}</td>
+                <td>{{ consultation.doctorName }}</td>
+                <td>{{ consultation.dateConsultation | date:'medium' }}</td>
+                <td>{{ consultation.motifConsultation }}</td>
+                <td>
+                    <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="info"
+                        (onClick)="editConsultation(consultation)" />
+                    <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
+                        (onClick)="deleteConsultation(consultation)" />
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <tr>
+                <td colspan="5">In total there are {{ consultations ? consultations.length : 0 }} consultations.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="consultationDialog" [style]="{width: '600px'}" header="Consultation Details" [modal]="true"
+    styleClass="p-fluid border-round-2xl">
+    <ng-template pTemplate="content">
+        <div class="formgrid grid mt-3">
+            <div class="field col-12 md:col-6">
+                <label for="date" class="font-bold">Date</label>
+                <p-datepicker id="date" [(ngModel)]="currentDate" [showTime]="true" [showIcon]="true" appendTo="body"
+                    placeholder="Select Date"></p-datepicker>
+            </div>
+            <div class="field col-12 md:col-6">
+                <label for="patient" class="font-bold">Patient</label>
+                <p-select id="patient" [options]="patients" [(ngModel)]="consultation.patientId" optionLabel="nom"
+                    optionValue="id" placeholder="Select a Patient" appendTo="body" styleClass="w-full">
+                    <ng-template let-patient pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{patient.nom}} {{patient.prenom}}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-patient pTemplate="selectedItem">
+                        <div class="flex align-items-center gap-2" *ngIf="patient">
+                            <div>{{patient.nom}} {{patient.prenom}}</div>
+                        </div>
+                    </ng-template>
+                </p-select>
+            </div>
+
+            <div class="field col-12 md:col-6">
+                <label for="motif" class="font-bold">Motif</label>
+                <input type="text" pInputText id="motif" [(ngModel)]="consultation.motifConsultation" required
+                    class="border-round-lg" placeholder="Enter Motif" />
+                <small class="p-error block mt-1" *ngIf="submitted && !consultation.motifConsultation">Motif is
+                    required.</small>
+            </div>
+
+            <div class="field col-12">
+                <label for="description" class="font-bold">Description</label>
+                <textarea id="description" pTextarea [(ngModel)]="consultation.description" rows="3"
+                    class="border-round-lg w-full"></textarea>
+            </div>
+
+            <div class="field col-12">
+                <label for="diagnostic" class="font-bold">Diagnostic</label>
+                <textarea id="diagnostic" pTextarea [(ngModel)]="consultation.diagnostic" rows="3"
+                    class="border-round-lg w-full"></textarea>
+            </div>
+
+            <div class="field col-12 md:col-6">
+                <label for="doctorName" class="font-bold">Doctor Name</label>
+                <input type="text" pInputText id="doctorName" [(ngModel)]="consultation.doctorName"
+                    class="border-round-lg" placeholder="Doctor Name" />
+            </div>
+            <div class="field col-12 md:col-6">
+                <label for="doctorId" class="font-bold">Doctor ID</label>
+                <input type="number" pInputText id="doctorId" [(ngModel)]="consultation.doctorId"
+                    class="border-round-lg" placeholder="Doctor ID" />
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <p-button label="Cancel" icon="pi pi-times" [text]="true" (onClick)="hideDialog()"
+            styleClass="p-button-secondary"></p-button>
+        <p-button label="Save" icon="pi pi-check" [raised]="true" (onClick)="saveConsultation()"
+            styleClass="p-button-primary border-round-lg"></p-button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

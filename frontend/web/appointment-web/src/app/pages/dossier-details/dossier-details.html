@@ -1,0 +1,189 @@
+<div class="card p-4">
+    <div class="flex justify-content-between align-items-center mb-4">
+        <h2 class="m-0">Dossier Details</h2>
+        <div class="flex gap-2">
+            <p-button icon="pi pi-file-pdf" label="Export to PDF" severity="success" (onClick)="exportToPDF()" />
+            <p-button icon="pi pi-arrow-left" label="Back to List" [outlined]="true" (onClick)="goBack()" />
+        </div>
+    </div>
+
+    <div *ngIf="loading" class="text-center p-5">
+        <i class="pi pi-spin pi-spinner" style="font-size: 3rem"></i>
+        <p class="mt-3">Loading dossier details...</p>
+    </div>
+
+    <div *ngIf="!loading && dossier">
+        <p-card header="Dossier Information" styleClass="mb-4 shadow-2">
+            <div class="grid">
+                <div class="col-12 md:col-6">
+                    <div class="mb-3">
+                        <label class="font-bold text-900">Type:</label>
+                        <p class="mt-2">{{ dossier.type }}</p>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="mb-3">
+                        <label class="font-bold text-900">Patient:</label>
+                        <p class="mt-2" *ngIf="patient">
+                            <span class="p-tag p-tag-info">{{ patient.nom }} {{ patient.prenom }}</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label class="font-bold text-900">Notes:</label>
+                        <p class="mt-2">{{ dossier.notes || 'No notes' }}</p>
+                    </div>
+                </div>
+            </div>
+        </p-card>
+
+        <p-card header="Patient Information" styleClass="mb-4 shadow-2" *ngIf="patient">
+            <div class="grid">
+                <div class="col-12 md:col-4">
+                    <div class="mb-3">
+                        <label class="font-bold text-900">Name:</label>
+                        <p class="mt-2">{{ patient.nom }} {{ patient.prenom }}</p>
+                    </div>
+                </div>
+                <div class="col-12 md:col-4">
+                    <div class="mb-3">
+                        <label class="font-bold text-900">CIN:</label>
+                        <p class="mt-2">{{ patient.cin }}</p>
+                    </div>
+                </div>
+                <div class="col-12 md:col-4">
+                    <div class="mb-3">
+                        <label class="font-bold text-900">Phone:</label>
+                        <p class="mt-2">{{ patient.telephone || 'N/A' }}</p>
+                    </div>
+                </div>
+            </div>
+        </p-card>
+
+        <p-card header="Documents" styleClass="mb-4 shadow-2">
+            <p-table [value]="dossier.documents || []" [tableStyle]="{ 'min-width': '50rem' }">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Upload Date</th>
+                        <th>Access Confirmed</th>
+                        <th>Actions</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-doc>
+                    <tr>
+                        <td class="font-medium">{{ doc.nom }}</td>
+                        <td>{{ doc.type }}</td>
+                        <td>{{ doc.dateUpload | date:'dd/MM/yyyy' }}</td>
+                        <td>
+                            <p-tag [value]="doc.accesConfirmePatient ? 'Yes' : 'No'"
+                                [severity]="doc.accesConfirmePatient ? 'success' : 'warn'"></p-tag>
+                        </td>
+                        <td>
+                            <a [href]="doc.cheminUpload" target="_blank"
+                                class="p-button p-button-icon-only p-button-rounded p-button-text p-button-info"
+                                pTooltip="Open Document">
+                                <i class="pi pi-external-link"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="5" class="text-center p-4">
+                            <i class="pi pi-inbox text-4xl text-400"></i>
+                            <p class="mt-3 text-600">No documents found</p>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </p-card>
+
+        <p-card header="Predictive Analyses" styleClass="mb-4 shadow-2">
+            <p-table [value]="dossier.analyses || []" [tableStyle]="{ 'min-width': '50rem' }">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Type</th>
+                        <th>Result</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-analyse>
+                    <tr>
+                        <td class="font-medium">{{ analyse.type }}</td>
+                        <td>
+                            <p-tag [value]="analyse.resultat" [severity]="$any(getSeverity(analyse.resultat))"></p-tag>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="2" class="text-center p-4">
+                            <i class="pi pi-inbox text-4xl text-400"></i>
+                            <p class="mt-3 text-600">No analyses found</p>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </p-card>
+
+        <p-card header="Prescriptions" styleClass="mb-4 shadow-2">
+            <p-table [value]="dossier.ordonnances || []" [tableStyle]="{ 'min-width': '50rem' }">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Date Prescription</th>
+                        <th>Medicaments</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-ord>
+                    <tr>
+                        <td>{{ ord.datePrescription | date:'dd/MM/yyyy' }}</td>
+                        <td>{{ ord.medicaments || 'No medicaments' }}</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="2" class="text-center p-4">
+                            <i class="pi pi-inbox text-4xl text-400"></i>
+                            <p class="mt-3 text-600">No prescriptions found</p>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </p-card>
+
+        <p-card header="Exam Results" styleClass="mb-4 shadow-2">
+            <p-table [value]="dossier.resultatsExamens || []" [tableStyle]="{ 'min-width': '50rem' }">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Type Examen</th>
+                        <th>Date Examen</th>
+                        <th>Result</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-exam>
+                    <tr>
+                        <td class="font-medium">{{ exam.typeExamen }}</td>
+                        <td>{{ exam.dateExamen | date:'dd/MM/yyyy' }}</td>
+                        <td>{{ exam.resultat }}</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="3" class="text-center p-4">
+                            <i class="pi pi-inbox text-4xl text-400"></i>
+                            <p class="mt-3 text-600">No exam results found</p>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </p-card>
+    </div>
+
+    <div *ngIf="!loading && !dossier" class="text-center p-5">
+        <i class="pi pi-exclamation-triangle text-6xl text-orange-500"></i>
+        <h3 class="mt-3">Dossier not found</h3>
+        <p-button label="Go Back" icon="pi pi-arrow-left" (onClick)="goBack()" class="mt-3" />
+    </div>
+</div>
