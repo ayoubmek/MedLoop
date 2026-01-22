@@ -49,6 +49,9 @@ public class Appointment {
     private Long bedId; // affecté ou nn
 
     private LocalDateTime createdAt;
+    @ManyToOne
+    @JoinColumn(name = "medecin_id")
+    private Medecin medecin;
 
     @PrePersist
     protected void onCreate() {

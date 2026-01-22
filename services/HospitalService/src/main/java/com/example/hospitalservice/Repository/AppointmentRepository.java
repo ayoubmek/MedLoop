@@ -34,4 +34,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     // Nouveau: Trouver tous les appointments par hôpital
     @Query("SELECT a FROM Appointment a JOIN FETCH a.service s JOIN FETCH s.hospital h WHERE h.id = :hospitalId")
     List<Appointment> findByHospitalId(@Param("hospitalId") Long hospitalId);
+
+    // Tous les RDV d’un médecin
+    List<Appointment> findByMedecinId(Long medecinId);
 }
