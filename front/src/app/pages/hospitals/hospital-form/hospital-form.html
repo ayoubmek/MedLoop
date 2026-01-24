@@ -1,0 +1,76 @@
+<p-fluid>
+  <div class="font-semibold text-xl mb-4">
+    {{ isEditing ? 'Modifier l’hôpital' : 'Ajouter un hôpital' }}
+  </div>
+
+  <div class="card flex flex-col gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Nom -->
+      <div class="flex flex-col gap-2">
+        <label for="name">Nom de l’hôpital *</label>
+        <input
+          pInputText
+          id="name"
+          type="text"
+          [(ngModel)]="hospital.name"
+          name="name"
+          required
+        />
+      </div>
+
+      <!-- Adresse -->
+      <div class="flex flex-col gap-2">
+        <label for="address">Adresse *</label>
+        <input
+          pInputText
+          id="address"
+          type="text"
+          [(ngModel)]="hospital.address"
+          name="address"
+          required
+        />
+      </div>
+
+      <!-- Téléphone -->
+      <div class="flex flex-col gap-2">
+        <label for="phone">Téléphone *</label>
+        <input
+          pInputText
+          id="phone"
+          type="text"
+          [(ngModel)]="hospital.phone"
+          name="phone"
+          required
+        />
+      </div>
+
+      <!-- Email -->
+      <div class="flex flex-col gap-2">
+        <label for="email">Email *</label>
+        <input
+          pInputText
+          id="email"
+          type="email"
+          [(ngModel)]="hospital.email"
+          name="email"
+          required
+        />
+      </div>
+    </div>
+ <!-- Service -->
+    </div>
+    <!-- Boutons d’action -->
+    <div class="flex flex-wrap gap-2 justify-content-end mt-4">
+      <p-button
+        label="Annuler"
+        severity="secondary"
+        (click)="onCancel()"
+      ></p-button>
+
+       <p-button
+        [label]="isEditing ? 'Mettre à jour' : 'Créer'"
+        (click)="onSubmit()"
+        [disabled]="!isFormValid()"
+      ></p-button>
+    </div>
+</p-fluid>

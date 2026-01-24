@@ -1,0 +1,104 @@
+<!-- services-form.html -->
+<div class="p-fluid">
+  <div class="font-semibold text-xl mb-4">
+    {{ isEditing ? 'Modifier le service' : 'Ajouter un service' }}
+  </div>
+
+  <div class="card flex flex-col gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Nom du service -->
+      <div class="flex flex-col gap-2">
+        <label for="name">Nom du service *</label>
+        <input
+          pInputText
+          id="name"
+          type="text"
+          [(ngModel)]="service.name"
+          name="name"
+          placeholder="Ex: Chirurgie Générale"
+          required
+        />
+      </div>
+
+      <!-- Département -->
+      <div class="flex flex-col gap-2">
+        <label for="department">Département *</label>
+        <input
+          pInputText
+          id="department"
+          type="text"
+          [(ngModel)]="service.department"
+          name="department"
+          placeholder="Ex: Interventions chirurgicales"
+          required
+        />
+      </div>
+
+      <!-- Hôpital (Select natif) -->
+      <div class="flex flex-col gap-2">
+        <label for="hospital">Hôpital *</label>
+        <select
+          id="hospital"
+          [(ngModel)]="selectedHospitalId"
+          name="hospital"
+          class="p-inputtext p-component"
+          required
+        >
+          <option value="" disabled selected>Sélectionnez un hôpital</option>
+          <option *ngFor="let hospital of hospitals" [value]="hospital.id">
+            {{ hospital.name }}
+          </option>
+        </select>
+        <!-- Debug info -->
+        <small class="text-gray-500">Valeur sélectionnée: {{ selectedHospitalId }}</small>
+      </div>
+
+      <!-- Lits totaux -->
+      <div class="flex flex-col gap-2">
+        <label for="totalBeds">Nombre total de lits *</label>
+        <p-inputNumber
+          [(ngModel)]="service.totalBeds"
+          [min]="0"
+          [showButtons]="true"
+          inputId="totalBeds"
+          name="totalBeds"
+        ></p-inputNumber>
+      </div>
+
+      <!-- Lits disponibles -->
+      <div class="flex flex-col gap-2">
+        <label for="availableBeds">Lits disponibles *</label>
+        <p-inputNumber
+          [(ngModel)]="service.availableBeds"
+          [min]="0"
+          [max]="service.totalBeds"
+          [showButtons]="true"
+          inputId="availableBeds"
+          name="availableBeds"
+        ></p-inputNumber>
+      </div>
+    </div>
+
+    <!-- Message de validation -->
+    <div *ngIf="service.availableBeds > service.totalBeds" class="text-red-500 text-sm mt-2">
+      ⚠️ Le nombre de lits disponibles ne peut pas dépasser le nombre total de lits
+    </div>
+
+    <!-- Boutons d'action -->
+    <div class="flex flex-wrap gap-2 justify-content-end mt-4">
+      <p-button
+        label="Annuler"
+        severity="secondary"
+        (click)="onCancel()"
+        [disabled]="loading"
+      ></p-button>
+
+      <p-button
+        [label]="isEditing ? 'Mettre à jour' : 'Créer'"
+        (click)="onSubmit()"
+        [disabled]="!isFormValid() || loading"
+        [loading]="loading"
+      ></p-button>
+    </div>
+  </div>
+</div>
