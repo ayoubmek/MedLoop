@@ -1,0 +1,138 @@
+<div class="card">
+  <div class="font-semibold text-xl mb-4">Liste des Rendez-vous</div>
+  
+  <!-- Bouton de création -->
+  <p-button 
+    label="Ajouter un rendez-vous" 
+    icon="pi pi-plus"
+    severity="success"
+    (onClick)="createAppointment()"
+    class="mb-3">
+  </p-button>
+
+  <p-table
+    #dt
+    [value]="filteredAppointments"
+    [rows]="10"
+    [paginator]="true"
+    [showGridlines]="true"
+    [rowHover]="true"
+    responsiveLayout="scroll"
+    [globalFilterFields]="['patientId', 'doctorId', 'service.name', 'service.department', 'service.hospital.name']"
+  >
+    <!-- Barre de recherche -->
+    <ng-template #caption>
+      <div class="flex justify-between items-center flex-column sm:flex-row">
+        <div></div>
+        <p-iconfield iconPosition="left" class="ml-auto">
+          <p-inputicon>
+            <i class="pi pi-search"></i>
+          </p-inputicon>
+          <input
+            pInputText
+            type="text"
+            (input)="onGlobalFilter(dt, $event)"
+            placeholder="Rechercher..."
+          />
+        </p-iconfield>
+      </div>
+    </ng-template>
+
+    <!-- En-têtes -->
+    <ng-template #header>
+      <tr>
+        <th>ID Patient</th>
+        <th>ID Médecin</th>
+        <th>Service</th>
+        <th>Hôpital</th>
+        <th>Date et Heure</th>
+        <th>Durée</th>
+        <th>Lit</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+
+    <!-- Corps du tableau -->
+    <ng-template #body let-appointment>
+      <tr>
+        <td>{{ appointment.patientId }}</td>
+        <td>{{ appointment.doctorId }}</td>
+        <td>
+          <div *ngIf="appointment.service">
+            <strong>{{ appointment.service.name }}</strong><br>
+            <small class="text-color-secondary">
+              {{ appointment.service.department }}
+            </small>
+          </div>
+          <span *ngIf="!appointment.service" class="text-color-secondary">
+            Non assigné
+          </span>
+        </td>
+        <td>
+          <div *ngIf="appointment.service?.hospital">
+            <strong>{{ appointment.service.hospital.name }}</strong><br>
+            <small class="text-color-secondary">
+              <i class="pi pi-map-marker"></i> {{ appointment.service.hospital.address }}
+            </small>
+          </div>
+          <span *ngIf="!appointment.service?.hospital" class="text-color-secondary">
+            Non assigné
+          </span>
+        </td>
+        <td>
+          <i class="pi pi-calendar mr-1"></i>
+          {{ formatDateTime(appointment.dateTime) }}
+        </td>
+        <td>
+          <i class="pi pi-clock mr-1"></i>
+          {{ appointment.duration }} min
+        </td>
+        <td>
+          <span *ngIf="appointment.bedId">Lit {{ appointment.bedId }}</span>
+          <span *ngIf="!appointment.bedId" class="text-color-secondary">Non assigné</span>
+        </td>
+        <td>
+          <p-tag 
+            [value]="getStatusLabel(appointment.status)"
+            [severity]="getStatusSeverity(appointment.status)">
+          </p-tag>
+        </td>
+        <td>
+          <button
+            pButton
+            icon="pi pi-pencil"
+            (click)="onEdit(appointment.id!)"
+            class="p-button-warning p-button-sm mr-1"
+            [disabled]="appointment.status === 'CANCELLED' || appointment.status === 'COMPLETED'"
+            pTooltip="Modifier">
+          </button>
+          <button
+            pButton
+            icon="pi pi-ban"
+            (click)="onCancel(appointment)"
+            class="p-button-secondary p-button-sm mr-1"
+            [disabled]="appointment.status === 'CANCELLED' || appointment.status === 'COMPLETED'"
+            pTooltip="Annuler">
+          </button>
+          <button
+            pButton
+            icon="pi pi-trash"
+            (click)="onDelete(appointment.id!)"
+            class="p-button-danger p-button-sm"
+            pTooltip="Supprimer">
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="9">Aucun rendez-vous trouvé.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-confirmdialog></p-confirmdialog>
+<p-toast></p-toast>

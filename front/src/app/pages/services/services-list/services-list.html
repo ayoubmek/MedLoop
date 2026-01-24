@@ -1,0 +1,103 @@
+<div class="card">
+  <div class="font-semibold text-xl mb-4">Liste des Services Médicaux</div>
+  
+  <!-- Bouton de création -->
+  <p-button 
+    label="Ajouter un service" 
+    icon="pi pi-plus"
+    severity="success"
+    (onClick)="createService()">
+  </p-button>
+
+  <p-table
+    #dt
+    [value]="services"
+    [rows]="10"
+    [paginator]="true"
+    [showGridlines]="true"
+    [rowHover]="true"
+    responsiveLayout="scroll"
+    [globalFilterFields]="['name', 'department', 'hospital.name', 'hospital.address']"
+  >
+    <!-- Barre de recherche -->
+    <ng-template #caption>
+      <div class="flex justify-between items-center flex-column sm:flex-row">
+        <div></div>
+        <p-iconfield iconPosition="left" class="ml-auto">
+          <p-inputicon>
+            <i class="pi pi-search"></i>
+          </p-inputicon>
+          <input
+            pInputText
+            type="text"
+            (input)="onGlobalFilter(dt, $event)"
+            placeholder="Rechercher..."
+          />
+        </p-iconfield>
+      </div>
+    </ng-template>
+
+    <!-- En-têtes -->
+    <ng-template #header>
+      <tr>
+        <th>Nom du Service</th>
+        <th>Département</th>
+        <th>Lits Totaux</th>
+        <th>Lits Disponibles</th>
+        <th>Disponibilité</th>
+        <th>Hôpital</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+
+    <!-- Corps du tableau -->
+    <ng-template #body let-service>
+      <tr>
+        <td>{{ service.name }}</td>
+        <td>{{ service.department }}</td>
+        <td>{{ service.totalBeds }}</td>
+        <td>{{ service.availableBeds }}</td>
+        <td>
+          <p-tag 
+            [value]="service.availableBeds + '/' + service.totalBeds"
+            [severity]="getAvailabilityColor(service)">
+          </p-tag>
+        </td>
+        <td>
+          <div *ngIf="service.hospital">
+            <strong>{{ service.hospital.name }}</strong><br>
+            <small class="text-color-secondary">
+              <i class="pi pi-map-marker"></i> {{ service.hospital.address }}
+            </small><br>
+            <small class="text-color-secondary">
+              <i class="pi pi-phone"></i> {{ service.hospital.phone }}
+            </small>
+          </div>
+          <span *ngIf="!service.hospital" class="text-color-secondary">
+            Non assigné
+          </span>
+        </td>
+        <td>
+          <button
+            pButton
+            icon="pi pi-pencil"
+            (click)="onEdit(service.id)"
+            class="p-button-warning p-button-sm mr-1"
+          ></button>
+          <button
+            pButton
+            icon="pi pi-trash"
+            (click)="onDelete(service.id)"
+            class="p-button-danger p-button-sm"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="7">Aucun service médical trouvé.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
