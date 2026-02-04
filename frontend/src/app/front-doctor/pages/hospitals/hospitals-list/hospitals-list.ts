@@ -10,8 +10,8 @@ import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HospitalService } from 'src/app/services/hospital';
-import { Hospital } from 'src/app/models/hospital.model';
+import { HospitalService } from '../../../services/hospital';
+import { Hospital } from '../../../models/hospital.model';
 @Component({
   selector: 'app-hospitals-list',
   templateUrl: './hospitals-list.html', // ✅ extension .html
@@ -39,7 +39,7 @@ export class HospitalsListComponent implements OnInit {
   }
 
   loadHospitals() {
-    this.hospitalService.getAllHospitals().subscribe((data) => {
+    this.hospitalService.getAllHospitals().subscribe((data: Hospital[]) => {
       this.hospitals = data;
     });
   }
