@@ -1,0 +1,141 @@
+<!-- appointment-form.html -->
+<div class="p-fluid">
+  <div class="font-semibold text-xl mb-4">
+    {{ isEditMode ? 'Modifier le rendez-vous' : 'Nouveau rendez-vous' }}
+  </div>
+
+  <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
+    <div class="card flex flex-col gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- ID Patient -->
+        <div class="flex flex-col gap-2">
+          <label for="patientId">ID Patient *</label>
+          <p-inputNumber
+            formControlName="patientId"
+            [min]="1"
+            [showButtons]="true"
+            [useGrouping]="false"
+            inputId="patientId"
+            placeholder="Ex: 1"
+          ></p-inputNumber>
+          <small class="text-red-500" *ngIf="isFieldInvalid('patientId')">
+            L'ID du patient est requis
+          </small>
+        </div>
+
+        <!-- ID Docteur -->
+        <div class="flex flex-col gap-2">
+          <label for="doctorId">ID Docteur *</label>
+          <p-inputNumber
+            formControlName="doctorId"
+            [min]="1"
+            [showButtons]="true"
+            [useGrouping]="false"
+            inputId="doctorId"
+            placeholder="Ex: 1"
+          ></p-inputNumber>
+          <small class="text-red-500" *ngIf="isFieldInvalid('doctorId')">
+            L'ID du docteur est requis
+          </small>
+        </div>
+
+       <!-- Service (Select natif) -->
+<div class="flex flex-col gap-2">
+  <label for="service">Service *</label>
+  <select
+    id="service"
+    formControlName="service"
+    class="p-inputtext p-component"
+  >
+    <option [ngValue]="null" disabled>Sélectionnez un service</option>
+    <option *ngFor="let service of services" [ngValue]="service">
+      {{ service.name }}
+    </option>
+  </select>
+  <small class="text-red-500" *ngIf="isFieldInvalid('service')">
+    Le service est requis
+  </small>
+</div>
+
+        <!-- Date et heure -->
+<div class="flex flex-col gap-2">
+  <label for="dateTime">Date et heure *</label>
+  <input
+    pInputText
+    id="dateTime"
+    type="datetime-local"
+    formControlName="dateTime"
+    [min]="getMinDateTime()"
+    class="p-inputtext p-component"
+  />
+  <small class="text-red-500" *ngIf="isFieldInvalid('dateTime')">
+    La date et l'heure sont requises
+  </small>
+</div>
+
+        <!-- Durée -->
+        <div class="flex flex-col gap-2">
+          <label for="duration">Durée (minutes) *</label>
+          <p-inputNumber
+            formControlName="duration"
+            [min]="15"
+            [step]="15"
+            [showButtons]="true"
+            inputId="duration"
+            suffix=" min"
+          ></p-inputNumber>
+          <small class="text-red-500" *ngIf="isFieldInvalid('duration')">
+            La durée doit être d'au moins 15 minutes
+          </small>
+        </div>
+
+        <!-- ID Lit (optionnel) -->
+        <div class="flex flex-col gap-2">
+          <label for="bedId">ID Lit</label>
+          <p-inputNumber
+            formControlName="bedId"
+            [min]="1"
+            [showButtons]="true"
+            [useGrouping]="false"
+            inputId="bedId"
+            placeholder="Optionnel"
+          ></p-inputNumber>
+        </div>
+
+        <!-- Statut (Select natif) -->
+        <div class="flex flex-col gap-2">
+          <label for="status">Statut *</label>
+          <select
+            id="status"
+            formControlName="status"
+            class="p-inputtext p-component"
+          >
+            <option *ngFor="let status of statuses" [value]="status.value">
+              {{ status.label }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Boutons d'action -->
+      <div class="flex flex-wrap gap-2 justify-content-end mt-4">
+        <p-button
+          label="Annuler"
+          severity="secondary"
+          (click)="onCancel()"
+          [disabled]="loading"
+          type="button"
+        ></p-button>
+
+        <p-button
+          [label]="isEditMode ? 'Mettre à jour' : 'Créer'"
+          type="submit"
+          [disabled]="appointmentForm.invalid || loading"
+          [loading]="loading"
+        ></p-button>
+      </div>
+    </div>
+  </form>
+
+  <p-toast></p-toast>
+</div>
