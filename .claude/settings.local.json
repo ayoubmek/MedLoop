@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"C:\\\\Users\\\\skander\\\\pds master\\\\MedLoop\" log --oneline --all)",
+      "Bash(mvnw.cmd clean compile:*)",
+      "Bash(./mvnw clean compile:*)",
+      "Bash(MAVEN_SKIP_RC=true ./mvnw clean:*)",
+      "Bash(where mvn:*)",
+      "Bash(\"D:\\\\mvn\\\\apache-maven-3.9.12\\\\bin\\\\mvn.cmd\" clean compile -DskipTests)",
+      "Bash(java -version:*)",
+      "Bash(\"D:\\\\mvn\\\\apache-maven-3.9.12\\\\bin\\\\mvn.cmd\" package -DskipTests)",
+      "Bash(docker --version:*)",
+      "Bash(docker logs:*)",
+      "Bash(docker start:*)",
+      "Bash(curl:*)",
+      "Bash(docker-compose down:*)",
+      "Bash(docker-compose up:*)",
+      "Bash(docker restart:*)",
+      "Bash(docker inspect:*)",
+      "Bash(docker-compose build:*)"
+    ]
+  }
+}

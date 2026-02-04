@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: medloop-postgres
+    environment:
+      POSTGRES_DB: medloop_db
+      POSTGRES_USER: medloop
+      POSTGRES_PASSWORD: medloop123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - medloop-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U medloop -d medloop_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Keycloak Identity Provider
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0
+    container_name: medloop-keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin123
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/medloop_db
+      KC_DB_USERNAME: medloop
+      KC_DB_PASSWORD: medloop123
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HTTP_ENABLED: "true"
+      KC_HEALTH_ENABLED: "true"
+    command: start-dev --import-realm
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - medloop-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # Admin Microservice
+  admin-service:
+    build:
+      context: ./services/admin-microservice
+      dockerfile: Dockerfile
+    container_name: medloop-admin-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/medloop_db
+      SPRING_DATASOURCE_USERNAME: medloop
+      SPRING_DATASOURCE_PASSWORD: medloop123
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://localhost:8080/realms/medloop
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/medloop/protocol/openid-connect/certs
+      APP_CORS_ALLOWED_ORIGINS: http://localhost:4200
+    ports:
+      - "8081:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    networks:
+      - medloop-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+networks:
+  medloop-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

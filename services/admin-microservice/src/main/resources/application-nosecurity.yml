@@ -1,0 +1,57 @@
+# Profile for testing without Keycloak (development only)
+server:
+  port: 8081
+
+spring:
+  application:
+    name: admin-microservice
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/medloop_db
+    username: medloop
+    password: medloop123
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  # Disable OAuth2 for this profile
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration
+
+logging:
+  level:
+    root: INFO
+    com.medloop: DEBUG
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+app:
+  cors:
+    allowed-origins: http://localhost:4200
+  jwt:
+    auth:
+      converter:
+        resource-id: admin-service
+        principal-attribute: preferred_username
