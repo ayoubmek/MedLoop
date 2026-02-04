@@ -17,9 +17,16 @@ export class AuthCallback implements OnInit {
     constructor(private authService: AuthService, private router: Router) {}
 
     ngOnInit() {
-        // Handle the OAuth callback
+        // Handle the OAuth callback and redirect based on user role
         this.authService.handleCallback().then(() => {
-            this.router.navigate(['/app']);
+            const profile = this.authService.userProfile;
+            const roles = profile?.realm_access?.roles || [];
+
+            if (roles.includes('doctor')) {
+                this.router.navigate(['/doctor']);
+            } else {
+                this.router.navigate(['/app']);
+            }
         }).catch((error) => {
             console.error('Authentication error:', error);
             this.router.navigate(['/auth/login']);
