@@ -1,5 +1,6 @@
 package com.medloop.admin.service;
 
+import com.medloop.admin.client.HospitalServiceClient;
 import com.medloop.admin.dto.DoctorDTO;
 import com.medloop.admin.entity.Doctor;
 import com.medloop.admin.entity.Hospital;
@@ -23,6 +24,7 @@ public class DoctorService {
 
     private final DoctorRepository doctorRepository;
     private final HospitalRepository hospitalRepository;
+    private final HospitalServiceClient hospitalServiceClient;
 
     public List<DoctorDTO> getAllDoctors() {
         log.info("Fetching all doctors");
@@ -59,7 +61,12 @@ public class DoctorService {
 
         Doctor savedDoctor = doctorRepository.save(doctor);
         log.info("Doctor created with id: {}", savedDoctor.getId());
-        return convertToDTO(savedDoctor);
+        
+        // Sync to hospital service
+        DoctorDTO savedDoctorDTO = convertToDTO(savedDoctor);
+        hospitalServiceClient.createMedecinFromDoctor(savedDoctorDTO);
+        
+        return savedDoctorDTO;
     }
 
     public DoctorDTO updateDoctor(Long id, DoctorDTO doctorDTO) {
@@ -95,7 +102,12 @@ public class DoctorService {
 
         Doctor updatedDoctor = doctorRepository.save(doctor);
         log.info("Doctor updated successfully");
-        return convertToDTO(updatedDoctor);
+        
+        // Sync to hospital service
+        DoctorDTO updatedDoctorDTO = convertToDTO(updatedDoctor);
+        hospitalServiceClient.updateMedecinFromDoctor(id, updatedDoctorDTO);
+        
+        return updatedDoctorDTO;
     }
 
     public void deleteDoctor(Long id) {
@@ -105,8 +117,16 @@ public class DoctorService {
             throw new ResourceNotFoundException("Doctor not found with id: " + id);
         }
 
+        // Get doctor info before deletion for sync
+        Doctor doctor = doctorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor not found with id: " + id));
+        String doctorName = doctor.getName();
+
         doctorRepository.deleteById(id);
         log.info("Doctor deleted successfully");
+        
+        // Sync deletion to hospital service
+        hospitalServiceClient.deleteMedecinFromDoctor(id, doctorName);
     }
 
     public List<DoctorDTO> getDoctorsByHospital(Long hospitalId) {

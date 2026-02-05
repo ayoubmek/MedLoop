@@ -49,6 +49,10 @@ management:
     health:
       show-details: always
 
+# Hospital Service Configuration
+hospital-service:
+  url: ${HOSPITAL_SERVICE_URL:http://localhost:8082/hospitalService}
+
 app:
   cors:
     allowed-origins: http://localhost:4200
