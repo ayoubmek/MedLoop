@@ -90,8 +90,8 @@ services:
     container_name: medloop-hospital-service
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hospital
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_USERNAME: medloop
+      SPRING_DATASOURCE_PASSWORD: medloop123
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_ORIGINS: http://localhost:4200
       MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_METHODS: GET,POST,PUT,DELETE,OPTIONS
