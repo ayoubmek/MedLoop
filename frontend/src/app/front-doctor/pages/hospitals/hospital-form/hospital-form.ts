@@ -68,7 +68,7 @@ export class HospitalFormComponent implements OnInit {
         console.error('Erreur chargement hôpital:', err);
         alert('Impossible de charger cet hôpital');
         this.loading = false;
-        this.router.navigate(['/hospitals']);
+        this.router.navigate(['..'], { relativeTo: this.route });
       }
     });
   }
@@ -121,7 +121,7 @@ export class HospitalFormComponent implements OnInit {
         this.loading = false;
         
         this.save.emit(updatedHospital);
-        this.router.navigate(['/hospitals']);
+        this.router.navigate(['..'], { relativeTo: this.route });
       },
       error: (err) => {
         console.error('❌ Erreur complète:', err);
@@ -158,7 +158,7 @@ export class HospitalFormComponent implements OnInit {
         this.loading = false;
         
         this.save.emit(createdHospital);
-        this.router.navigate(['/hospitals']);
+        this.router.navigate(['..'], { relativeTo: this.route });
       },
       error: (err) => {
         console.error('Erreur création hôpital:', err);

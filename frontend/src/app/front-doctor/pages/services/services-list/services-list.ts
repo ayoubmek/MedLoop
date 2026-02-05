@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -33,7 +33,8 @@ export class ServicesListComponent implements OnInit {
 
   constructor(
     private medicalServiceService: ServicesList,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -59,11 +60,11 @@ export class ServicesListComponent implements OnInit {
 
 
   createService() {
-    this.router.navigate(['/services/create']);
+    this.router.navigate(['create'], { relativeTo: this.route });
   }
 
   onEdit(id: number) {
-    this.router.navigate(['/services/edit', id]);
+    this.router.navigate(['edit', id], { relativeTo: this.route });
   }
 
   onDelete(id: number) {

@@ -8,17 +8,17 @@ import { AppFooter } from './app.footer';
 import { LayoutService } from '../service/layout.service';
 
 @Component({
-    selector: 'app-layout',
+    selector: 'app-doctor-layout',
     standalone: true,
     imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppFooter],
     template: `<div class="layout-wrapper" [ngClass]="containerClass">
-        <app-topbar></app-topbar>
-        <app-sidebar></app-sidebar>
+        <app-doctor-topbar></app-doctor-topbar>
+        <app-doctor-sidebar></app-doctor-sidebar>
         <div class="layout-main-container">
             <div class="layout-main">
                 <router-outlet></router-outlet>
             </div>
-            <app-footer></app-footer>
+            <app-doctor-footer></app-doctor-footer>
         </div>
         <div class="layout-mask animate-fadein"></div>
     </div> `

@@ -82,7 +82,7 @@ export class ServiceFormComponent implements OnInit {
         console.error('Erreur chargement service:', err);
         alert('Erreur lors du chargement du service');
         this.loading = false;
-        this.router.navigate(['/services']);
+        this.router.navigate(['..'], { relativeTo: this.route });
       }
     });
   }
@@ -138,7 +138,7 @@ onSubmit() {
         next: (response) => {
           console.log('Réponse mise à jour:', response);
           alert('Service mis à jour avec succès');
-          this.router.navigate(['/services']);
+          this.router.navigate(['..'], { relativeTo: this.route });
         },
         error: (err: any) => {
           console.error('Erreur complète:', err);
@@ -171,7 +171,7 @@ onSubmit() {
         next: (response) => {
           console.log('Réponse création:', response);
           alert('Service créé avec succès');
-          this.router.navigate(['/services']);
+          this.router.navigate(['..'], { relativeTo: this.route });
         },
         error: (err: any) => {
           console.error('Erreur complète:', err);
@@ -203,7 +203,7 @@ onSubmit() {
 
 
   onCancel() {
-    this.router.navigate(['/services']);
+    this.router.navigate(['..'], { relativeTo: this.route });
   }
 
   isFormValid(): boolean {

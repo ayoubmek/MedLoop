@@ -20,7 +20,10 @@ export class AuthCallback implements OnInit {
         // Handle the OAuth callback and redirect based on user role
         this.authService.handleCallback().then(() => {
             const profile = this.authService.userProfile;
-            const roles = profile?.realm_access?.roles || [];
+            const roles = (profile?.realm_access?.roles || []).map((r: string) => r.toLowerCase());
+
+            console.log('User Profile:', profile);
+            console.log('Roles:', roles);
 
             if (roles.includes('doctor')) {
                 this.router.navigate(['/doctor']);

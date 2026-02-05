@@ -153,7 +153,7 @@ loadAppointment(id: number): void {
         summary: 'Erreur',
         detail: 'Impossible de charger le rendez-vous'
       });
-      this.router.navigate(['/appointments']);
+      this.router.navigate(['..'] , { relativeTo: this.route }); // Rediriger vers la liste des rendez-vous
     }
   });
 }
@@ -247,7 +247,7 @@ onSubmit(): void {
           detail: 'Rendez-vous mis à jour avec succès'
         });
         setTimeout(() => {
-          this.router.navigate(['/appointments']);
+          this.router.navigate(['..'] , { relativeTo: this.route });
         }, 1500);
       },
       error: (error) => {
@@ -271,7 +271,7 @@ onSubmit(): void {
           detail: 'Rendez-vous créé avec succès'
         });
         setTimeout(() => {
-          this.router.navigate(['/appointments']);
+          this.router.navigate(['..'] , { relativeTo: this.route });
         }, 1500);
       },
       error: (error) => {
@@ -288,7 +288,7 @@ onSubmit(): void {
 }
 
   onCancel(): void {
-    this.router.navigate(['/appointments']);
+    this.router.navigate(['..'] , { relativeTo: this.route });
   }
 
   isFieldInvalid(fieldName: string): boolean {

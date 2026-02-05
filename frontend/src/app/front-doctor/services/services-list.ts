@@ -9,7 +9,7 @@ import {catchError, tap } from 'rxjs';
   providedIn: 'root'
 })
 export class ServicesList {
-  private apiUrl = 'http://localhost:8080/hospitalService/api/services';
+  private apiUrl = 'http://localhost:8082/hospitalService/api/services';
 
   constructor(private http: HttpClient) {}
 

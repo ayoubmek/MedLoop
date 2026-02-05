@@ -37,7 +37,7 @@ declare type SurfacesType = {
 };
 
 @Component({
-    selector: 'app-configurator',
+    selector: 'app-doctor-configurator',
     standalone: true,
     imports: [CommonModule, FormsModule, SelectButtonModule],
     template: `

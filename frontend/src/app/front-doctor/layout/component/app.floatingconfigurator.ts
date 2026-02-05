@@ -6,7 +6,7 @@ import { LayoutService } from '../service/layout.service';
 import {CommonModule} from "@angular/common";
 
 @Component({
-    selector: 'app-floating-configurator',
+    selector: 'app-doctor-floating-configurator',
     imports: [CommonModule, ButtonModule, StyleClassModule, AppConfigurator],
     template: `
         <div class="flex gap-4 top-8 right-8" [ngClass]="{'fixed':float()}">

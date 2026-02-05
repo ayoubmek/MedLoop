@@ -6,7 +6,7 @@ import { Appointment, AppointmentCreateDTO } from '../models/appointment.model';
   providedIn: 'root'
 })
 export class Appointments {
-  private apiUrl = 'http://localhost:8080/hospitalService/api/appointments';
+  private apiUrl = 'http://localhost:8082/hospitalService/api/appointments';
 
   constructor(private http: HttpClient) {}
 

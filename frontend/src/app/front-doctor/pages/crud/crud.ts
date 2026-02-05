@@ -32,7 +32,7 @@ interface ExportColumn {
 }
 
 @Component({
-    selector: 'app-crud',
+    selector: 'app-doctor-crud',
     standalone: true,
     imports: [
         CommonModule,

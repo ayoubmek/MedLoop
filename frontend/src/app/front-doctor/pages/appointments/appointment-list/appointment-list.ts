@@ -2,7 +2,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
@@ -53,6 +53,7 @@ export class AppointmentListComponent implements OnInit {
     private servicesList: ServicesList,
     private hospitalService: HospitalService,
     private router: Router,
+    private route: ActivatedRoute,
     private confirmationService: ConfirmationService,
     private messageService: MessageService
   ) {}
@@ -152,11 +153,11 @@ export class AppointmentListComponent implements OnInit {
   }
 
   createAppointment(): void {
-    this.router.navigate(['/appointments/create']);
+    this.router.navigate(['create'], { relativeTo: this.route });
   }
 
   onEdit(id: number): void {
-    this.router.navigate(['/appointments/edit', id]);
+    this.router.navigate(['edit', id], { relativeTo: this.route });
   }
 
   onCancel(appointment: Appointment): void {

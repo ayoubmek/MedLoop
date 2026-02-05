@@ -82,6 +82,34 @@ services:
       timeout: 10s
       retries: 5
 
+  # Hospital Microservice
+  hospital-service:
+    build:
+      context: ./services/HospitalService
+      dockerfile: Dockerfile
+    container_name: medloop-hospital-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hospital
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_ORIGINS: http://localhost:4200
+      MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_METHODS: GET,POST,PUT,DELETE,OPTIONS
+      MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_HEADERS: "*"
+      MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOW_CREDENTIALS: "true"
+    ports:
+      - "8082:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - medloop-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/hospitalService/api/hospitals/getAll"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
 networks:
   medloop-network:
     driver: bridge

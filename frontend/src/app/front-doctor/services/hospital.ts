@@ -6,7 +6,7 @@ import { Hospital, CreateHospitalDto, UpdateHospitalDto } from '../models/hospit
 
 @Injectable({ providedIn: 'root' })
 export class HospitalService {
-  private apiUrl = 'http://localhost:8080/hospitalService/api/hospitals';
+  private apiUrl = 'http://localhost:8082/hospitalService/api/hospitals';
 
   constructor(private http: HttpClient) {}
 

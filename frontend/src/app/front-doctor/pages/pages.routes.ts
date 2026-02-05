@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { Documentation } from './documentation/documentation';
 import { Crud } from './crud/crud';
 import { Empty } from './empty/empty';
+import { Dashboard } from './dashboard/dashboard';
 import { HospitalsListComponent } from './hospitals/hospitals-list/hospitals-list';
 import { HospitalFormComponent } from './hospitals/hospital-form/hospital-form';
 import { ServicesListComponent } from './services/services-list/services-list';
@@ -10,7 +11,7 @@ import { AppointmentListComponent } from './appointments/appointment-list/appoin
 import { AppointmentForm } from './appointments/appointment-form/appointment-form';
 
 export default [
-    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+    { path: '', component: Dashboard },
     { path: 'documentation', component: Documentation },
     { path: 'crud', component: Crud },
     { path: 'empty', component: Empty },

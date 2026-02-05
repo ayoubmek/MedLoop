@@ -9,7 +9,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HospitalService } from '../../../services/hospital';
 import { Hospital } from '../../../models/hospital.model';
 @Component({
@@ -32,7 +32,7 @@ export class HospitalsListComponent implements OnInit {
 
   @ViewChild('dt') table!: Table; // ✅ Table est maintenant reconnu
 
-  constructor(private hospitalService: HospitalService,  private router: Router) {}
+  constructor(private hospitalService: HospitalService,  private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.loadHospitals();
@@ -49,11 +49,11 @@ export class HospitalsListComponent implements OnInit {
   }
 
   onEdit(id: number) {
-  this.router.navigate(['/hospitals/edit', id]); // ✅ Chemin correct
+  this.router.navigate(['edit', id], { relativeTo: this.route });
 }
 
 createHospital() {
-    this.router.navigate(['/hospitals/new']);
+    this.router.navigate(['new'], { relativeTo: this.route });
   }
 
 
@@ -79,6 +79,6 @@ openEditForm(hospital: Hospital) {
   // Passe hospitalCopy au formulaire
 }
 onCreate() {
-  this.router.navigate(['/hospitals/new']); // ✅ Chemin correct
+  this.router.navigate(['new'], { relativeTo: this.route });
 }
 }
