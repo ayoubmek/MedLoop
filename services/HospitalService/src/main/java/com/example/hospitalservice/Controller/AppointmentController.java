@@ -1,8 +1,12 @@
 package com.example.hospitalservice.Controller;
 
 import com.example.hospitalservice.entities.Appointment;
+import com.example.hospitalservice.entities.Patient;
+import com.example.hospitalservice.entities.Medecin;
 import com.example.hospitalservice.entities.MedicalService;
 import com.example.hospitalservice.service.AppointmentService;
+import com.example.hospitalservice.service.PatientService;
+import com.example.hospitalservice.service.MedecinService;
 import com.example.hospitalservice.service.MedicalServiceService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -18,9 +22,18 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api/appointments")
 public class AppointmentController {
     private final AppointmentService appointmentService;
+    private final PatientService patientService;
+    private final MedecinService medecinService;
+    private final MedicalServiceService medicalServiceService;
 
-    public AppointmentController(AppointmentService appointmentService) {
+    public AppointmentController(AppointmentService appointmentService,
+                                 PatientService patientService,
+                                 MedecinService medecinService,
+                                 MedicalServiceService medicalServiceService) {
         this.appointmentService = appointmentService;
+        this.patientService = patientService;
+        this.medecinService = medecinService;
+        this.medicalServiceService = medicalServiceService;
     }
 
     @GetMapping("/getAll")
@@ -32,19 +45,25 @@ public class AppointmentController {
     public ResponseEntity<Appointment> getAppointmentById(@PathVariable Long id) {
         return ResponseEntity.ok(appointmentService.getAppointmentById(id));
     }
-    // Nouveau: Récupérer les appointments par service
+
     @GetMapping("/service/{serviceId}")
     public ResponseEntity<List<Appointment>> getAppointmentsByService(@PathVariable Long serviceId) {
         List<Appointment> appointments = appointmentService.getAppointmentsByService(serviceId);
         return ResponseEntity.ok(appointments);
     }
 
-    // Nouveau: Récupérer les appointments par hôpital
     @GetMapping("/hospital/{hospitalId}")
     public ResponseEntity<List<Appointment>> getAppointmentsByHospital(@PathVariable Long hospitalId) {
         List<Appointment> appointments = appointmentService.getAppointmentsByHospital(hospitalId);
         return ResponseEntity.ok(appointments);
     }
+
+    @GetMapping("/doctor/{doctorId}")
+    public ResponseEntity<List<Appointment>> getAppointmentsByDoctor(@PathVariable Long doctorId) {
+        List<Appointment> appointments = appointmentService.getAppointmentsByDoctor(doctorId);
+        return ResponseEntity.ok(appointments);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<?> createAppointment(@RequestBody Map<String, Object> payload) {
         try {
@@ -74,19 +93,26 @@ public class AppointmentController {
             System.out.println("DateTime: " + dateTime);
             System.out.println("Duration: " + duration);
 
+            // Récupérer les objets Patient et Medecin
+            Patient patient = patientService.getPatientById(patientId);
+            Medecin medecin = medecinService.getMedecinById(doctorId);
+
+            // Service is optional now
+            MedicalService service = null;
+            if (serviceId != null) {
+                service = medicalServiceService.getServiceById(serviceId);
+            }
+
             // Créer l'objet Appointment
             Appointment appointment = new Appointment();
-            appointment.setPatientId(patientId);
-            appointment.setDoctorId(doctorId);
+            appointment.setPatient(patient);
+            appointment.setMedecin(medecin);
+            if (service != null) {
+                appointment.setService(service);
+            }
             appointment.setDateTime(dateTime);
             appointment.setDuration(duration);
             appointment.setBedId(bedId);
-
-            // Créer un objet MedicalService avec juste l'ID
-            com.example.hospitalservice.entities.MedicalService service =
-                    new com.example.hospitalservice.entities.MedicalService();
-            service.setId(serviceId);
-            appointment.setService(service);
 
             Appointment created = appointmentService.createAppointment(appointment);
 
@@ -104,7 +130,6 @@ public class AppointmentController {
             ));
         }
     }
-
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateAppointment(@PathVariable Long id, @RequestBody Map<String, Object> payload) {
@@ -130,20 +155,27 @@ public class AppointmentController {
             Long bedId = payload.get("bedId") != null ?
                     ((Number) payload.get("bedId")).longValue() : null;
 
+            // Récupérer les objets Patient et Medecin
+            Patient patient = patientService.getPatientById(patientId);
+            Medecin medecin = medecinService.getMedecinById(doctorId);
+
+            // Service is optional now
+            MedicalService service = null;
+            if (serviceId != null) {
+                service = medicalServiceService.getServiceById(serviceId);
+            }
+
             // Créer l'objet Appointment
             Appointment appointment = new Appointment();
-            appointment.setPatientId(patientId);
-            appointment.setDoctorId(doctorId);
+            appointment.setPatient(patient);
+            appointment.setMedecin(medecin);
+            if (service != null) {
+                appointment.setService(service);
+            }
             appointment.setDateTime(dateTime);
             appointment.setDuration(duration);
             appointment.setBedId(bedId);
             appointment.setStatus(com.example.hospitalservice.entities.AppointmentStatus.valueOf(status));
-
-            // Créer un objet MedicalService avec juste l'ID
-            com.example.hospitalservice.entities.MedicalService service =
-                    new com.example.hospitalservice.entities.MedicalService();
-            service.setId(serviceId);
-            appointment.setService(service);
 
             Appointment updated = appointmentService.updateAppointment(id, appointment);
 
@@ -162,7 +194,6 @@ public class AppointmentController {
         }
     }
 
-    // CORRECTION: Changement de @PostMapping à @PutMapping ou @PatchMapping
     @PutMapping("/{id}/cancel")
     public ResponseEntity<?> cancelAppointment(@PathVariable Long id) {
         try {
@@ -187,7 +218,6 @@ public class AppointmentController {
         }
     }
 
-    // AJOUT: Endpoint pour la suppression
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAppointment(@PathVariable Long id) {
         try {
@@ -215,7 +245,7 @@ public class AppointmentController {
     @GetMapping("/available")
     public ResponseEntity<List<LocalDateTime>> getAvailableSlots(
             @RequestParam Long serviceId,
-            @RequestParam String date // 2025-12-20
+            @RequestParam String date
     ) {
         LocalDateTime dateTime = LocalDateTime.parse(date + "T00:00:00");
         return ResponseEntity.ok(appointmentService.getAvailableSlots(serviceId, dateTime));

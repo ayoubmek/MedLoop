@@ -25,19 +25,20 @@ export class AppMenu {
                 items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/doctor'] }]
             },
             {
-                label: 'Gestion des Hôpitaux',
-                icon: 'pi pi-fw pi-hospital',
-                items: [{ label: 'Liste des Hôpitaux', icon: 'pi pi-fw pi-list', routerLink: ['hospitals'] }]
-            },
-            {
-                label: 'Gestion des Services',
-                icon: 'pi pi-fw pi-briefcase',
-                items: [{ label: 'Liste des Services', icon: 'pi pi-fw pi-list', routerLink: ['services'] }]
+                label: 'Gestion des Patients',
+                icon: 'pi pi-fw pi-users',
+                items: [
+                    { label: 'Liste des Patients', icon: 'pi pi-fw pi-list', routerLink: ['/doctor', 'patients'] },
+                    { label: 'Ajouter un Patient', icon: 'pi pi-fw pi-plus', routerLink: ['/doctor', 'patients', 'create'] }
+                ]
             },
             {
                 label: 'Gestion des Rendez-vous',
                 icon: 'pi pi-fw pi-calendar',
-                items: [{ label: 'Liste des Rendez-vous', icon: 'pi pi-fw pi-list', routerLink: ['appointments'] }]
+                items: [
+                    { label: 'Mes Rendez-vous', icon: 'pi pi-fw pi-list', routerLink: ['/doctor', 'appointments'] },
+                    { label: 'Créer un Rendez-vous', icon: 'pi pi-fw pi-plus', routerLink: ['/doctor', 'appointments', 'create'] }
+                ]
             },
             {
                 label: 'Documentation',
@@ -45,7 +46,7 @@ export class AppMenu {
                     {
                         label: 'Documentation',
                         icon: 'pi pi-fw pi-book',
-                        routerLink: ['documentation']
+                        routerLink: ['/doctor', 'documentation']
                     }
                 ]
             }

@@ -78,7 +78,7 @@ ngOnInit(): void {
     this.appointmentForm = this.fb.group({
       patientId: ['', [Validators.required, Validators.min(1)]],
       doctorId: ['', [Validators.required, Validators.min(1)]],
-      service: [null, Validators.required],
+      service: [null],
       dateTime: ['', Validators.required],
       duration: ['', [Validators.required, Validators.min(15)]], // ✅ Pas de valeur par défaut
       bedId: [null],
@@ -212,27 +212,21 @@ onSubmit(): void {
   // ✅ CORRECTION : Vérifier et extraire l'ID du service correctement
   const serviceId = formValue.service?.id;
   
-  if (!serviceId) {
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Erreur',
-      detail: 'Veuillez sélectionner un service valide'
-    });
-    this.loading = false;
-    return;
-  }
+  
 
-  const appointmentData = {
+  const appointmentData: any = {
     patientId: formValue.patientId,
     doctorId: formValue.doctorId,
-    service: {
-      id: serviceId  // ✅ Utiliser la variable extraite
-    },
     dateTime: formattedDateTime,
     duration: formValue.duration,
     bedId: formValue.bedId,
     status: formValue.status
   };
+
+  // Only add service if it's selected
+  if (serviceId) {
+    appointmentData.service = { id: serviceId };
+  }
 
   console.log('Données à envoyer:', appointmentData);
 

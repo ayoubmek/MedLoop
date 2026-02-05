@@ -1,0 +1,28 @@
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.space-y-4 {
+  > * {
+    margin-bottom: 1rem;
+  }
+}
+
+.ml-2 {
+  margin-left: 0.5rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.p-error {
+  color: #f87171;
+  font-size: 0.875rem;
+  display: block;
+  margin-top: 0.25rem;
+}
+
+.w-full {
+  width: 100%;
+}

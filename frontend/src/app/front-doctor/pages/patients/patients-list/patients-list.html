@@ -1,0 +1,89 @@
+<div class="grid">
+  <div class="col-12">
+    <div class="card">
+      <h5>Gestion des Patients</h5>
+      
+      <p-toast></p-toast>
+
+      <div class="mb-4">
+        <button 
+          pButton 
+          pRipple 
+          type="button" 
+          label="Ajouter un Patient" 
+          icon="pi pi-plus" 
+          class="p-button-success"
+          (click)="createPatient()"
+        ></button>
+      </div>
+
+      <div class="mb-3">
+        <p-iconField iconPosition="left">
+          <i class="pi pi-search"></i>
+          <input 
+            pInputText 
+            type="text" 
+            placeholder="Rechercher un patient..." 
+            [(ngModel)]="searchValue"
+            (input)="onSearch($event)"
+          />
+        </p-iconField>
+      </div>
+
+      <p-table 
+        [value]="patients" 
+        [rows]="10" 
+        [paginator]="true" 
+        [loading]="loading"
+        [globalFilterFields]="['nom', 'prenom', 'email', 'telephone']"
+        responsiveLayout="scroll"
+        styleClass="p-datatable-striped"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="nom">Nom <p-sortIcon field="nom"></p-sortIcon></th>
+            <th pSortableColumn="prenom">Prénom <p-sortIcon field="prenom"></p-sortIcon></th>
+            <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
+            <th pSortableColumn="telephone">Téléphone <p-sortIcon field="telephone"></p-sortIcon></th>
+            <th>Date de Naissance</th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-patient>
+          <tr>
+            <td>{{ patient.nom }}</td>
+            <td>{{ patient.prenom }}</td>
+            <td>{{ patient.email }}</td>
+            <td>{{ patient.telephone }}</td>
+            <td>{{ patient.dateNaissance | date:'dd/MM/yyyy' }}</td>
+            <td>
+              <button 
+                pButton 
+                pRipple 
+                type="button" 
+                pTooltip="Modifier" 
+                icon="pi pi-pencil" 
+                class="p-button-rounded p-button-warning mr-2"
+                (click)="onEdit(patient.id)"
+              ></button>
+              <button 
+                pButton 
+                pRipple 
+                type="button" 
+                pTooltip="Supprimer" 
+                icon="pi pi-trash" 
+                class="p-button-rounded p-button-danger"
+                (click)="onDelete(patient.id)"
+              ></button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6" class="text-center">Aucun patient trouvé</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>

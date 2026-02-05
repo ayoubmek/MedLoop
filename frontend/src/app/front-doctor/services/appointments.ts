@@ -30,6 +30,11 @@ export class Appointments {
     return this.http.get<Appointment[]>(`${this.apiUrl}/hospital/${hospitalId}`);
   }
 
+  // Récupérer les rendez-vous d'un médecin
+  getAppointmentsByDoctor(doctorId: number): Observable<Appointment[]> {
+    return this.http.get<Appointment[]>(`${this.apiUrl}/doctor/${doctorId}`);
+  }
+
   // Créer un rendez-vous
   createAppointment(appointmentData: AppointmentCreateDTO): Observable<Appointment> {
     return this.http.post<Appointment>(`${this.apiUrl}/create`, appointmentData);

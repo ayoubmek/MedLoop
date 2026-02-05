@@ -1,0 +1,178 @@
+<div class="grid">
+  <div class="col-12 md:col-8 md:col-offset-2">
+    <div class="card">
+      <h5>{{ isEditMode ? 'Modifier un Patient' : 'Ajouter un Patient' }}</h5>
+      
+      <p-toast></p-toast>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+        <div class="grid">
+          <div class="col-12 md:col-6">
+            <div class="field">
+              <label for="nom">Nom *</label>
+              <input 
+                pInputText 
+                id="nom" 
+                type="text" 
+                formControlName="nom"
+                placeholder="Nom du patient"
+                class="w-full"
+              />
+              <small class="p-error" *ngIf="form.get('nom')?.invalid && form.get('nom')?.touched">
+                Le nom est requis (min 2 caractères)
+              </small>
+            </div>
+          </div>
+
+          <div class="col-12 md:col-6">
+            <div class="field">
+              <label for="prenom">Prénom *</label>
+              <input 
+                pInputText 
+                id="prenom" 
+                type="text" 
+                formControlName="prenom"
+                placeholder="Prénom du patient"
+                class="w-full"
+              />
+              <small class="p-error" *ngIf="form.get('prenom')?.invalid && form.get('prenom')?.touched">
+                Le prénom est requis (min 2 caractères)
+              </small>
+            </div>
+          </div>
+
+          <div class="col-12 md:col-6">
+            <div class="field">
+              <label for="email">Email *</label>
+              <input 
+                pInputText 
+                id="email" 
+                type="email" 
+                formControlName="email"
+                placeholder="Email du patient"
+                class="w-full"
+              />
+              <small class="p-error" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+                Email invalide
+              </small>
+            </div>
+          </div>
+
+          <div class="col-12 md:col-6">
+            <div class="field">
+              <label for="telephone">Téléphone *</label>
+              <input 
+                pInputText 
+                id="telephone" 
+                type="text" 
+                formControlName="telephone"
+                placeholder="Téléphone du patient"
+                class="w-full"
+              />
+              <small class="p-error" *ngIf="form.get('telephone')?.invalid && form.get('telephone')?.touched">
+                Téléphone invalide
+              </small>
+            </div>
+          </div>
+
+          <div class="col-12 md:col-6">
+            <div class="field">
+              <label for="dateNaissance">Date de Naissance *</label>
+              <p-datepicker 
+                inputId="dateNaissance" 
+                formControlName="dateNaissance"
+                [iconDisplay]="'input'"
+                [showIcon]="true"
+                dateFormat="dd/mm/yy"
+                placeholder="Sélectionner une date"
+                [showButtonBar]="true"
+                styleClass="w-full"
+              />
+              <small class="p-error" *ngIf="form.get('dateNaissance')?.invalid && form.get('dateNaissance')?.touched">
+                La date de naissance est requise
+              </small>
+            </div>
+          </div>
+
+          <div class="col-12 md:col-6">
+            <div class="field">
+              <label for="sexe">Sexe</label>
+              <p-select 
+                inputId="sexe" 
+                formControlName="sexe"
+                [options]="sexeOptions"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Sélectionner le sexe"
+                [showClear]="true"
+                styleClass="w-full"
+              />
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="field">
+              <label for="adresse">Adresse</label>
+              <input 
+                pInputText 
+                id="adresse" 
+                type="text" 
+                formControlName="adresse"
+                placeholder="Adresse du patient"
+                class="w-full"
+              />
+            </div>
+          </div>
+
+          <div class="col-12 md:col-6">
+            <div class="field">
+              <label for="codePostal">Code Postal</label>
+              <input 
+                pInputText 
+                id="codePostal" 
+                type="text" 
+                formControlName="codePostal"
+                placeholder="Code postal"
+                class="w-full"
+              />
+            </div>
+          </div>
+
+          <div class="col-12 md:col-6">
+            <div class="field">
+              <label for="ville">Ville</label>
+              <input 
+                pInputText 
+                id="ville" 
+                type="text" 
+                formControlName="ville"
+                placeholder="Ville"
+                class="w-full"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="field mt-4">
+          <p-button 
+            type="submit" 
+            [label]="isEditMode ? 'Mettre à jour' : 'Créer'" 
+            icon="pi pi-check"
+            severity="success"
+            [loading]="loading"
+            [disabled]="loading"
+          />
+          <p-button 
+            type="button" 
+            label="Annuler" 
+            icon="pi pi-times"
+            severity="secondary"
+            styleClass="ml-2"
+            (onClick)="onCancel()"
+            [disabled]="loading"
+          />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

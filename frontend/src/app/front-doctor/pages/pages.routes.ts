@@ -3,32 +3,22 @@ import { Documentation } from './documentation/documentation';
 import { Crud } from './crud/crud';
 import { Empty } from './empty/empty';
 import { Dashboard } from './dashboard/dashboard';
-import { HospitalsListComponent } from './hospitals/hospitals-list/hospitals-list';
-import { HospitalFormComponent } from './hospitals/hospital-form/hospital-form';
-import { ServicesListComponent } from './services/services-list/services-list';
-import { ServiceFormComponent } from './services/services-form/services-form';
 import { AppointmentListComponent } from './appointments/appointment-list/appointment-list';
 import { AppointmentForm } from './appointments/appointment-form/appointment-form';
+import { PatientsListComponent } from './patients/patients-list/patients-list';
+import { PatientFormComponent } from './patients/patient-form/patient-form';
 
-export default [
+export const routes: Routes = [
     { path: '', component: Dashboard },
     { path: 'documentation', component: Documentation },
     { path: 'crud', component: Crud },
     { path: 'empty', component: Empty },
     {
-        path: 'hospitals',
+        path: 'patients',
         children: [
-            { path: '', component: HospitalsListComponent },
-            { path: 'new', component: HospitalFormComponent },
-            { path: 'edit/:id', component: HospitalFormComponent }
-        ]
-    },
-    {
-        path: 'services',
-        children: [
-            { path: '', component: ServicesListComponent },
-            { path: 'create', component: ServiceFormComponent },
-            { path: 'edit/:id', component: ServiceFormComponent }
+            { path: '', component: PatientsListComponent },
+            { path: 'create', component: PatientFormComponent },
+            { path: 'edit/:id', component: PatientFormComponent }
         ]
     },
     {
@@ -40,4 +30,6 @@ export default [
         ]
     },
     { path: '**', redirectTo: '/notfound' }
-] as Routes;
+];
+
+export default routes;

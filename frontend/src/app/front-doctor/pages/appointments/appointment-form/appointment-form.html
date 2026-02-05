@@ -41,20 +41,18 @@
 
        <!-- Service (Select natif) -->
 <div class="flex flex-col gap-2">
-  <label for="service">Service *</label>
+  <label for="service">Service (optionnel)</label>
   <select
     id="service"
     formControlName="service"
     class="p-inputtext p-component"
   >
-    <option [ngValue]="null" disabled>Sélectionnez un service</option>
+    <option [ngValue]="null">Aucun service</option>
     <option *ngFor="let service of services" [ngValue]="service">
       {{ service.name }}
     </option>
   </select>
-  <small class="text-red-500" *ngIf="isFieldInvalid('service')">
-    Le service est requis
-  </small>
+  
 </div>
 
         <!-- Date et heure -->

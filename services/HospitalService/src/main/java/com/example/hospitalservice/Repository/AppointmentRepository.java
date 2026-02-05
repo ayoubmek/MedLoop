@@ -12,29 +12,44 @@ import java.util.List;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
-    boolean existsByDoctorIdAndDateTimeBetween(
-            Long doctorId,
-            LocalDateTime start,
-            LocalDateTime end
+
+    // REMOVED: existsByDoctorIdAndDateTimeBetween - this was causing the error
+    // ADDED: New method with correct path to medecin.id
+    @Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END FROM Appointment a " +
+            "WHERE a.medecin.id = :medecinId " +
+            "AND a.dateTime >= :start " +
+            "AND a.dateTime < :end")
+    boolean existsByMedecinIdAndDateTimeBetween(
+            @Param("medecinId") Long medecinId,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
     );
+
     void deleteByService_Id(Long serviceId);
+
     @Query("SELECT a FROM Appointment a JOIN FETCH a.service")
     List<Appointment> findAllWithService();
+
     @Query("SELECT a FROM Appointment a WHERE a.service.id = :serviceId AND DATE(a.dateTime) = :date AND a.status IN :activeStatuses")
     List<Appointment> findAppointmentsByServiceAndDate(
             @Param("serviceId") Long serviceId,
             @Param("date") LocalDateTime date,
             @Param("activeStatuses") List<AppointmentStatus> activeStatuses
     );
+
     void deleteByServiceId(Long serviceId);
-    // Nouveau: Trouver tous les appointments par service
+
+    // Trouver tous les appointments par service
     @Query("SELECT a FROM Appointment a JOIN FETCH a.service s WHERE s.id = :serviceId")
     List<Appointment> findByServiceId(@Param("serviceId") Long serviceId);
 
-    // Nouveau: Trouver tous les appointments par hôpital
+    // Trouver tous les appointments par hôpital
     @Query("SELECT a FROM Appointment a JOIN FETCH a.service s JOIN FETCH s.hospital h WHERE h.id = :hospitalId")
     List<Appointment> findByHospitalId(@Param("hospitalId") Long hospitalId);
 
-    // Tous les RDV d’un médecin
+    // Tous les RDV d'un médecin
     List<Appointment> findByMedecinId(Long medecinId);
+
+    // Alias for findByMedecinId
+    List<Appointment> findByMedecin_Id(Long medecinId);
 }
