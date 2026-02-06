@@ -94,6 +94,12 @@ export class PatientsListComponent implements OnInit {
     }
   }
 
+  viewMedicalRecords(id: number | undefined) {
+    if (id) {
+      this.router.navigate(['/doctor/medical-records/patient', id]);
+    }
+  }
+
   onSearch(event: any) {
     const value = event.target.value;
     if (value && value.length > 0) {

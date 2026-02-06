@@ -249,6 +249,12 @@ export class AppointmentListComponent implements OnInit {
     });
   }
 
+  createMedicalRecord(patientId: number): void {
+    if (!patientId) return;
+    // Navigate to the medical record creation page with patientId
+    this.router.navigate(['/doctor/medical-records/create', patientId]);
+  }
+
   getStatusSeverity(status: AppointmentStatus): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | null | undefined {
   switch (status) {
     case AppointmentStatus.CONFIRMED:

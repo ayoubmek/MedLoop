@@ -72,6 +72,15 @@
                 pButton 
                 pRipple 
                 type="button" 
+                pTooltip="Dossiers Médicaux" 
+                icon="pi pi-file" 
+                class="p-button-rounded p-button-info mr-2"
+                (click)="viewMedicalRecords(patient.id)"
+              ></button>
+              <button 
+                pButton 
+                pRipple 
+                type="button" 
                 pTooltip="Supprimer" 
                 icon="pi pi-trash" 
                 class="p-button-rounded p-button-danger"

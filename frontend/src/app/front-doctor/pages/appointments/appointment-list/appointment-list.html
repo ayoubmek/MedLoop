@@ -107,6 +107,13 @@
             class="p-button-danger p-button-sm"
             pTooltip="Supprimer">
           </button>
+            <button
+              pButton
+              icon="pi pi-file"
+              (click)="createMedicalRecord(appointment.patientId)"
+              class="p-button-info p-button-sm ml-2"
+              pTooltip="Créer Dossier Patient">
+            </button>
         </td>
       </tr>
     </ng-template>
