@@ -51,6 +51,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Make mvnw executable
+        run: chmod +x ./services/admin-microservice/mvnw ./services/HospitalService/mvnw
+
       - name: Build Admin Microservice
         working-directory: ./services/admin-microservice
         run: ./mvnw clean package -DskipTests
