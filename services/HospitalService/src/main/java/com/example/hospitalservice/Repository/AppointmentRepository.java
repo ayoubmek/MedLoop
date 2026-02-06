@@ -27,7 +27,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     void deleteByService_Id(Long serviceId);
 
-    @Query("SELECT a FROM Appointment a JOIN FETCH a.service")
+    @Query("SELECT a FROM Appointment a LEFT JOIN FETCH a.service")
     List<Appointment> findAllWithService();
 
     @Query("SELECT a FROM Appointment a WHERE a.service.id = :serviceId AND DATE(a.dateTime) = :date AND a.status IN :activeStatuses")
@@ -40,11 +40,11 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     void deleteByServiceId(Long serviceId);
 
     // Trouver tous les appointments par service
-    @Query("SELECT a FROM Appointment a JOIN FETCH a.service s WHERE s.id = :serviceId")
+    @Query("SELECT a FROM Appointment a LEFT JOIN FETCH a.service s WHERE s.id = :serviceId")
     List<Appointment> findByServiceId(@Param("serviceId") Long serviceId);
 
     // Trouver tous les appointments par hôpital
-    @Query("SELECT a FROM Appointment a JOIN FETCH a.service s JOIN FETCH s.hospital h WHERE h.id = :hospitalId")
+    @Query("SELECT a FROM Appointment a LEFT JOIN FETCH a.service s LEFT JOIN FETCH s.hospital h WHERE h.id = :hospitalId")
     List<Appointment> findByHospitalId(@Param("hospitalId") Long hospitalId);
 
     // Tous les RDV d'un médecin

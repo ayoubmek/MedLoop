@@ -5,6 +5,7 @@ import { ServicesList } from '../services/services-list';
 export interface Appointment {
   id?: number;
   patientId: number;
+  patientName?: string;
   doctorId: number;
   service: ServicesList;
   dateTime: string; // Format ISO: "2025-12-26T10:00:00"

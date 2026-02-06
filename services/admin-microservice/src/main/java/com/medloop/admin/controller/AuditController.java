@@ -34,6 +34,15 @@ public class AuditController {
         return ResponseEntity.ok(auditService.getAuditLogs(page, size));
     }
 
+    @GetMapping("/logs")
+    @Operation(summary = "Get audit logs with pagination - Dashboard endpoint")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE', 'RESPONSABLE_SECURITE')")
+    public ResponseEntity<Page<AuditLog>> getAuditLogsDashboard(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(auditService.getAuditLogs(page, size));
+    }
+
     @GetMapping("/user/{userId}")
     @Operation(summary = "Get audit logs by user")
     @PreAuthorize("hasAnyRole('ADMIN', 'RESPONSABLE_SECURITE')")

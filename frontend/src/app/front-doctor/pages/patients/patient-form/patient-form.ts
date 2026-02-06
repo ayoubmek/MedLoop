@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
-import { Card } from 'primeng/card';
 import { DatePicker } from 'primeng/datepicker';
 import { Select } from 'primeng/select';
 import { MessageService } from 'primeng/api';
@@ -23,7 +22,6 @@ import { Patient } from '../../../models/patient.model';
     RouterModule,
     Button,
     InputText,
-    Card,
     DatePicker,
     Select,
     Toast

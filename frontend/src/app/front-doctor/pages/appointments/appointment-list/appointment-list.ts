@@ -3,6 +3,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
@@ -11,6 +12,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
+import { DatePickerModule } from 'primeng/datepicker';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { Appointment, AppointmentStatus } from '../../../models/appointment.model';
@@ -25,6 +27,7 @@ import { HospitalService } from '../../../services/hospital';
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     TableModule,
     ButtonModule,
     TagModule,
@@ -32,7 +35,8 @@ import { HospitalService } from '../../../services/hospital';
     IconFieldModule,
     InputIconModule,
     ConfirmDialogModule,
-    ToastModule
+    ToastModule,
+    DatePickerModule
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './appointment-list.html',
@@ -41,6 +45,10 @@ import { HospitalService } from '../../../services/hospital';
 export class AppointmentListComponent implements OnInit {
   appointments: Appointment[] = [];
   filteredAppointments: Appointment[] = [];
+  patientNames: Map<number, string> = new Map();
+  
+  // Date filter
+  selectedDate: Date | null = null;
   
   hospitals: Hospital[] = [];
   services: MedicalService[] = [];
@@ -80,6 +88,26 @@ export class AppointmentListComponent implements OnInit {
         });
       }
     });
+  }
+
+  getPatientName(patientId: number): string {
+    return this.patientNames.get(patientId) || `Patient ${patientId}`;
+  }
+
+  onDateFilterChange(date: Date | null): void {
+    if (date) {
+      // Convert selected date to local date string (YYYY-MM-DD)
+      const selectedDate = new Date(date);
+      const filterDate = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
+      
+      this.filteredAppointments = this.appointments.filter(apt => {
+        const appointmentDateTime = new Date(apt.dateTime);
+        const appointmentDate = `${appointmentDateTime.getFullYear()}-${String(appointmentDateTime.getMonth() + 1).padStart(2, '0')}-${String(appointmentDateTime.getDate()).padStart(2, '0')}`;
+        return appointmentDate === filterDate;
+      });
+    } else {
+      this.filteredAppointments = this.appointments;
+    }
   }
 
   loadHospitals(): void {
@@ -146,10 +174,9 @@ export class AppointmentListComponent implements OnInit {
     }
   }
 
-  clearFilters(): void {
-    this.selectedHospital = null;
-    this.selectedService = null;
-    this.filteredAppointments = this.appointments;
+  onGlobalFilter(table: any, event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    table.filterGlobal(inputElement.value, 'contains');
   }
 
   createAppointment(): void {
@@ -220,11 +247,6 @@ export class AppointmentListComponent implements OnInit {
         });
       }
     });
-  }
-
-  onGlobalFilter(table: any, event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    table.filterGlobal(inputElement.value, 'contains');
   }
 
   getStatusSeverity(status: AppointmentStatus): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | null | undefined {

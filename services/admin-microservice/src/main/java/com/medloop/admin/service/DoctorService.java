@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +26,7 @@ public class DoctorService {
     private final DoctorRepository doctorRepository;
     private final HospitalRepository hospitalRepository;
     private final HospitalServiceClient hospitalServiceClient;
+    private final KeycloakService keycloakService;
 
     public List<DoctorDTO> getAllDoctors() {
         log.info("Fetching all doctors");
@@ -52,6 +54,26 @@ public class DoctorService {
         }
 
         Doctor doctor = convertToEntity(doctorDTO);
+
+        // Create Keycloak user for doctor
+        try {
+            com.medloop.admin.dto.KeycloakUserRequest kcReq = new com.medloop.admin.dto.KeycloakUserRequest();
+            // Use email as username by default
+            kcReq.setUsername(doctorDTO.getEmail());
+            kcReq.setEmail(doctorDTO.getEmail());
+            // generate a temporary password
+            String pwd = "Doc@" + UUID.randomUUID().toString().substring(0, 8);
+            kcReq.setPassword(pwd);
+            kcReq.setRoles(java.util.List.of("DOCTOR"));
+
+            String kcId = keycloakService.createUser(kcReq);
+            if (kcId != null && !kcId.isBlank()) {
+                doctor.setKeycloakUserId(kcId);
+            }
+        } catch (Exception e) {
+            log.error("Failed to create Keycloak user for doctor {}: {}", doctorDTO.getEmail(), e.getMessage());
+            throw new RuntimeException("Failed to create Keycloak user: " + e.getMessage(), e);
+        }
 
         if (doctorDTO.getHospitalId() != null) {
             Hospital hospital = hospitalRepository.findById(doctorDTO.getHospitalId())

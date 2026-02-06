@@ -28,8 +28,7 @@ export class AppMenu {
                 label: 'Admin Management',
                 items: [
                     { label: 'Doctors', icon: 'pi pi-fw pi-user-md', routerLink: ['/app/pages/doctors'] },
-                    { label: 'Patients', icon: 'pi pi-fw pi-users', routerLink: ['/app/pages/patients'] },
-                    { label: 'Hospitals', icon: 'pi pi-fw pi-building', routerLink: ['/app/pages/hospitals'] }
+                    { label: 'Patients', icon: 'pi pi-fw pi-users', routerLink: ['/app/pages/patients'] }
                 ]
             },
             {

@@ -10,6 +10,40 @@
     class="mb-3">
   </p-button>
 
+  <!-- Filters -->
+  <div class="mb-4 p-4 surface-card border-round">
+    <div class="flex flex-column gap-2 md:flex-row md:gap-3">
+      <div class="flex-1">
+        <label for="dateFilter" class="text-sm font-semibold block mb-2">Filtrer par date</label>
+        <p-datepicker
+          id="dateFilter"
+          [(ngModel)]="selectedDate"
+          (onSelect)="onDateFilterChange($event)"
+          (onClearButtonClick)="onDateFilterChange(null)"
+          [showIcon]="true"
+          dateFormat="dd/mm/yy"
+          placeholder="Sélectionner une date"
+        ></p-datepicker>
+      </div>
+      <div class="flex-1">
+        <label for="searchInput" class="text-sm font-semibold block mb-2">Rechercher</label>
+        <p-iconfield iconPosition="left">
+          <p-inputicon>
+            <i class="pi pi-search"></i>
+          </p-inputicon>
+          <input
+            id="searchInput"
+            pInputText
+            type="text"
+            (input)="onGlobalFilter(dt, $event)"
+            placeholder="Rechercher..."
+            class="w-full"
+          />
+        </p-iconfield>
+      </div>
+    </div>
+  </div>
+
   <p-table
     #dt
     [value]="filteredAppointments"
@@ -18,37 +52,15 @@
     [showGridlines]="true"
     [rowHover]="true"
     responsiveLayout="scroll"
-    [globalFilterFields]="['patientId', 'doctorId', 'service.name', 'service.department', 'service.hospital.name']"
+    [globalFilterFields]="['patientName', 'patientId', 'dateTime', 'duration', 'status']"
   >
-    <!-- Barre de recherche -->
-    <ng-template #caption>
-      <div class="flex justify-between items-center flex-column sm:flex-row">
-        <div></div>
-        <p-iconfield iconPosition="left" class="ml-auto">
-          <p-inputicon>
-            <i class="pi pi-search"></i>
-          </p-inputicon>
-          <input
-            pInputText
-            type="text"
-            (input)="onGlobalFilter(dt, $event)"
-            placeholder="Rechercher..."
-          />
-        </p-iconfield>
-      </div>
-    </ng-template>
-
     <!-- En-têtes -->
     <ng-template #header>
       <tr>
-        <th>ID Patient</th>
-        <th>ID Médecin</th>
-        <th>Service</th>
-        <th>Hôpital</th>
-        <th>Date et Heure</th>
-        <th>Durée</th>
-        <th>Lit</th>
-        <th>Statut</th>
+        <th pSortableColumn="patientId">Patient <p-sortIcon field="patientId"></p-sortIcon></th>
+        <th pSortableColumn="dateTime">Date et Heure <p-sortIcon field="dateTime"></p-sortIcon></th>
+        <th pSortableColumn="duration">Durée <p-sortIcon field="duration"></p-sortIcon></th>
+        <th pSortableColumn="status">Statut <p-sortIcon field="status"></p-sortIcon></th>
         <th>Actions</th>
       </tr>
     </ng-template>
@@ -56,30 +68,7 @@
     <!-- Corps du tableau -->
     <ng-template #body let-appointment>
       <tr>
-        <td>{{ appointment.patientId }}</td>
-        <td>{{ appointment.doctorId }}</td>
-        <td>
-          <div *ngIf="appointment.service">
-            <strong>{{ appointment.service.name }}</strong><br>
-            <small class="text-color-secondary">
-              {{ appointment.service.department }}
-            </small>
-          </div>
-          <span *ngIf="!appointment.service" class="text-color-secondary">
-            Non assigné
-          </span>
-        </td>
-        <td>
-          <div *ngIf="appointment.service?.hospital">
-            <strong>{{ appointment.service.hospital.name }}</strong><br>
-            <small class="text-color-secondary">
-              <i class="pi pi-map-marker"></i> {{ appointment.service.hospital.address }}
-            </small>
-          </div>
-          <span *ngIf="!appointment.service?.hospital" class="text-color-secondary">
-            Non assigné
-          </span>
-        </td>
+        <td>{{ appointment.patientName }} (ID: {{ appointment.patientId }})</td>
         <td>
           <i class="pi pi-calendar mr-1"></i>
           {{ formatDateTime(appointment.dateTime) }}
@@ -87,10 +76,6 @@
         <td>
           <i class="pi pi-clock mr-1"></i>
           {{ appointment.duration }} min
-        </td>
-        <td>
-          <span *ngIf="appointment.bedId">Lit {{ appointment.bedId }}</span>
-          <span *ngIf="!appointment.bedId" class="text-color-secondary">Non assigné</span>
         </td>
         <td>
           <p-tag 
@@ -128,7 +113,7 @@
 
     <ng-template #emptymessage>
       <tr>
-        <td colspan="9">Aucun rendez-vous trouvé.</td>
+        <td colspan="5">Aucun rendez-vous trouvé.</td>
       </tr>
     </ng-template>
   </p-table>

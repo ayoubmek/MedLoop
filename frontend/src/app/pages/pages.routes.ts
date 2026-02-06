@@ -5,6 +5,7 @@ import { Empty } from './empty/empty';
 import { Doctors } from './doctors/doctors';
 import { Patients } from './patients/patients';
 import { Hospitals } from './hospitals/hospitals';
+import { AdminUsers } from './admin-users/admin-users';
 
 export default [
     { path: 'documentation', component: Documentation },
@@ -13,5 +14,6 @@ export default [
     { path: 'doctors', component: Doctors },
     { path: 'patients', component: Patients },
     { path: 'hospitals', component: Hospitals },
+    { path: 'admin-users', component: AdminUsers },
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;

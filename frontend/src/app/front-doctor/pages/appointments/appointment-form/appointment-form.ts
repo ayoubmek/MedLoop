@@ -15,6 +15,7 @@ import { Appointments } from '../../../services/appointments';
 import { ServicesList } from '../../../services/services-list';
 import { MedicalService } from '../../../models/service.model';
 import { Appointment, AppointmentStatus } from '../../../models/appointment.model';
+import { AuthService } from '../../../../services/auth.service';
 @Component({
   selector: 'app-appointment-form',
   imports: [
@@ -46,30 +47,36 @@ appointmentForm!: FormGroup;
   appointmentId: number | null = null;
   loading = false;
   minDate: Date = new Date();
+  loggedInDoctorId: number | null = null;
 
   constructor(
     private fb: FormBuilder,
     private appointmentsService: Appointments,
     private servicesService: ServicesList,
+    private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
     private messageService: MessageService
   ) {}
 
 ngOnInit(): void {
+  // Get the logged-in doctor ID from auth service
+  const profile = this.authService.userProfile;
+  if (profile && profile.sub) {
+    // Try to extract doctor ID from profile - adjust based on your auth token structure
+    // If doctor ID is not in the token, you may need to fetch it from a service
+    console.log('User profile:', profile);
+  }
+
   this.initForm();
   
   this.route.params.subscribe(params => {
     if (params['id']) {
       this.isEditMode = true;
       this.appointmentId = +params['id'];
-      // Charger les services (qui chargera l'appointment en mode édition)
-      this.loadServices();
+      this.loadAppointment(this.appointmentId);
     } else {
       this.isEditMode = false;
-      // ✅ Mode création : NE PAS définir de statut par défaut
-      // Le statut sera défini par l'utilisateur via le formulaire HTML
-      this.loadServices();
     }
   });
 }
@@ -77,12 +84,9 @@ ngOnInit(): void {
   initForm(): void {
     this.appointmentForm = this.fb.group({
       patientId: ['', [Validators.required, Validators.min(1)]],
-      doctorId: ['', [Validators.required, Validators.min(1)]],
-      service: [null],
       dateTime: ['', Validators.required],
-      duration: ['', [Validators.required, Validators.min(15)]], // ✅ Pas de valeur par défaut
-      bedId: [null],
-      status: [null, Validators.required] // ✅ Pas de valeur par défaut
+      duration: ['', [Validators.required, Validators.min(15)]],
+      status: [null, Validators.required]
     });
   }
 
@@ -91,19 +95,9 @@ ngOnInit(): void {
       next: (data) => {
         this.services = data;
         console.log('Services chargés:', this.services);
-        
-        // ✅ Si on est en mode édition, charger l'appointment maintenant que les services sont disponibles
-        if (this.isEditMode && this.appointmentId) {
-          this.loadAppointment(this.appointmentId);
-        }
       },
       error: (error) => {
         console.error('Erreur lors du chargement des services:', error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erreur',
-          detail: 'Impossible de charger les services'
-        });
       }
     });
   }
@@ -123,24 +117,12 @@ loadAppointment(id: number): void {
         }
       }
       
-      // CORRECTION : Utiliser un type assertion
-      const appointmentService = appointment.service as unknown as MedicalService;
-      
-      let selectedService = null;
-      if (appointmentService && appointmentService.id) {
-        selectedService = this.services.find(s => s.id === appointmentService.id);
-      }
-      
-      console.log('Service sélectionné:', selectedService);
       console.log('Statut de l\'appointment:', appointment.status);
       
       this.appointmentForm.patchValue({
         patientId: appointment.patientId,
-        doctorId: appointment.doctorId,
-        service: selectedService || appointmentService,
         dateTime: formattedDate,
         duration: appointment.duration,
-        bedId: appointment.bedId,
         status: appointment.status
       });
       
@@ -153,7 +135,7 @@ loadAppointment(id: number): void {
         summary: 'Erreur',
         detail: 'Impossible de charger le rendez-vous'
       });
-      this.router.navigate(['..'] , { relativeTo: this.route }); // Rediriger vers la liste des rendez-vous
+      this.router.navigate(['..'] , { relativeTo: this.route });
     }
   });
 }
@@ -210,23 +192,14 @@ onSubmit(): void {
   }
 
   // ✅ CORRECTION : Vérifier et extraire l'ID du service correctement
-  const serviceId = formValue.service?.id;
   
-  
-
   const appointmentData: any = {
     patientId: formValue.patientId,
-    doctorId: formValue.doctorId,
+    doctorId: 1, // Use logged-in doctor ID - TODO: Get from auth service
     dateTime: formattedDateTime,
     duration: formValue.duration,
-    bedId: formValue.bedId,
     status: formValue.status
   };
-
-  // Only add service if it's selected
-  if (serviceId) {
-    appointmentData.service = { id: serviceId };
-  }
 
   console.log('Données à envoyer:', appointmentData);
 

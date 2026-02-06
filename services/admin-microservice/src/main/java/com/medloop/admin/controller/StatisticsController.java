@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/statistics")
 @RequiredArgsConstructor
@@ -32,5 +35,30 @@ public class StatisticsController {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE')")
     public ResponseEntity<StatisticsDTO> getOverallStatistics() {
         return ResponseEntity.ok(statisticsService.getStatistics());
+    }
+
+    @GetMapping("/dashboard")
+    @Operation(summary = "Get dashboard metrics")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE')")
+    public ResponseEntity<StatisticsDTO> getDashboardMetrics() {
+        return ResponseEntity.ok(statisticsService.getStatistics());
+    }
+
+    @GetMapping("/metrics")
+    @Operation(summary = "Get all system metrics")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE')")
+    public ResponseEntity<Map<String, Object>> getMetrics() {
+        StatisticsDTO stats = statisticsService.getStatistics();
+        Map<String, Object> metrics = new HashMap<>();
+        metrics.put("totalDoctors", stats.getTotalDoctors());
+        metrics.put("activeDoctors", stats.getActiveDoctors());
+        metrics.put("totalPatients", stats.getTotalPatients());
+        metrics.put("activePatients", stats.getActivePatients());
+        metrics.put("totalHospitals", stats.getTotalHospitals());
+        metrics.put("totalBeds", stats.getTotalBeds());
+        metrics.put("availableBeds", stats.getAvailableBeds());
+        metrics.put("bedOccupancyRate", stats.getBedOccupancyRate());
+        metrics.put("totalUsers", stats.getTotalDoctors() + stats.getTotalPatients());
+        return ResponseEntity.ok(metrics);
     }
 }

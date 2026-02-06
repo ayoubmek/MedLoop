@@ -23,53 +23,21 @@
           </small>
         </div>
 
-        <!-- ID Docteur -->
+        <!-- Date et heure -->
         <div class="flex flex-col gap-2">
-          <label for="doctorId">ID Docteur *</label>
-          <p-inputNumber
-            formControlName="doctorId"
-            [min]="1"
-            [showButtons]="true"
-            [useGrouping]="false"
-            inputId="doctorId"
-            placeholder="Ex: 1"
-          ></p-inputNumber>
-          <small class="text-red-500" *ngIf="isFieldInvalid('doctorId')">
-            L'ID du docteur est requis
+          <label for="dateTime">Date et heure *</label>
+          <input
+            pInputText
+            id="dateTime"
+            type="datetime-local"
+            formControlName="dateTime"
+            [min]="getMinDateTime()"
+            class="p-inputtext p-component"
+          />
+          <small class="text-red-500" *ngIf="isFieldInvalid('dateTime')">
+            La date et l'heure sont requises
           </small>
         </div>
-
-       <!-- Service (Select natif) -->
-<div class="flex flex-col gap-2">
-  <label for="service">Service (optionnel)</label>
-  <select
-    id="service"
-    formControlName="service"
-    class="p-inputtext p-component"
-  >
-    <option [ngValue]="null">Aucun service</option>
-    <option *ngFor="let service of services" [ngValue]="service">
-      {{ service.name }}
-    </option>
-  </select>
-  
-</div>
-
-        <!-- Date et heure -->
-<div class="flex flex-col gap-2">
-  <label for="dateTime">Date et heure *</label>
-  <input
-    pInputText
-    id="dateTime"
-    type="datetime-local"
-    formControlName="dateTime"
-    [min]="getMinDateTime()"
-    class="p-inputtext p-component"
-  />
-  <small class="text-red-500" *ngIf="isFieldInvalid('dateTime')">
-    La date et l'heure sont requises
-  </small>
-</div>
 
         <!-- Durée -->
         <div class="flex flex-col gap-2">
@@ -85,19 +53,6 @@
           <small class="text-red-500" *ngIf="isFieldInvalid('duration')">
             La durée doit être d'au moins 15 minutes
           </small>
-        </div>
-
-        <!-- ID Lit (optionnel) -->
-        <div class="flex flex-col gap-2">
-          <label for="bedId">ID Lit</label>
-          <p-inputNumber
-            formControlName="bedId"
-            [min]="1"
-            [showButtons]="true"
-            [useGrouping]="false"
-            inputId="bedId"
-            placeholder="Optionnel"
-          ></p-inputNumber>
         </div>
 
         <!-- Statut (Select natif) -->

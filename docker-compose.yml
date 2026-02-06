@@ -66,6 +66,10 @@ services:
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/medloop/protocol/openid-connect/certs
       APP_CORS_ALLOWED_ORIGINS: http://localhost:4200
       HOSPITAL_SERVICE_URL: http://hospital-service:8081/hospitalService
+      KEYCLOAK_BASE_URL: http://keycloak:8080
+      KEYCLOAK_REALM: medloop
+      KEYCLOAK_ADMIN_USERNAME: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin123
     ports:
       - "8081:8081"
     depends_on:
